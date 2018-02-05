@@ -1,5 +1,5 @@
 function loadProjects(success) {
-  return fetch(`/projects`, {
+  return fetch(`/api/projects`, {
     accept: 'application/json',
   }).then(parseJson)
     .then(success);
