@@ -1,45 +1,46 @@
 import React, { Component } from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  Switch,
+} from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 import ApiClient from './ApiClient';
-import Project from './Project';
+import {client} from './Client';
+import ProjectsContainer from './ProjectsContainer';
 
-class App extends Component {
-  state = {
-    projects:[]
-  }
+const PrivateRoute = ({component, ...rest}) => (
+  <Route {...rest} render={(props) => (
+    client.isLoggedIn() ? (
+      React.createElement(component, props)
+      ) : (
+      window.location.assign('http://localhost:3001/users/sign_in')
+      )
+  )} />
+); 
 
-  componentWillMount() {
-    ApiClient.loadProjects((projects) => {
-      this.setState({ projects: projects });
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-  }
+/*
+const Profile = (props) => (
+  <div className='equal width row'>
+    <div className='column'>
+      <h2 className='ui text center header'>
+        Welcome to WroksTracker
+      </h2>
+    </div>
+    <div className='column'>
+      Hello world
+    </div>
+  </div>
+);*/
 
 
-  render() {
-    const projects = this.state.projects.map((project) => (
-      <Project 
-        title={project.title}
-        key={project.id}
-      />
-      ));
-    
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        {projects}
-      </div>
-    );
-  }
-}
+const App = () => (
+  <div className='ui grid container'>
+    <Route path='/projects' component={ProjectsContainer} />
+  </div>
+);
 
 export default App;

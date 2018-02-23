@@ -1,33 +1,11 @@
 import React, { Component } from 'react';
-import Router from 'react-router/BrowserRouter';
-import Match from 'react-router/Match';
-import Link from 'react-router/Link';
-import Redirect from 'react-router/Redirect';
-
-
-/*
-const Match = ({pattern, component: Component}) => {
-  const pathname = window.location.pathname;
-  if(pathname.match(pattern)) {
-    return (
-      <Component />
-    );
-  } else {
-    return null;
-  }
-};
-
-const Link = ({ to, children }) => (
-  <a
-    onClick={(e) => {
-      e.preventDefault();
-      history.push(to);
-    }}
-    href={to}
-  >
-    {children}
-  </a>
-)*/
+import { 
+  BrowserRouter as Router, 
+  Route,
+  Link,
+  Redirect,
+  Switch,
+} from 'react-router-dom';
 
 const App = () => (
   <Router>
@@ -50,9 +28,34 @@ const App = () => (
       </ul>
 
       <hr />
-      {/* We'll insert the Match component here */}
-      <Match pattern='/atlantic' component={Atlantic} />
-      <Match pattern='/pacific' component={Pacific} />
+      {/* We'll insert the Route component here */}
+      <Switch>
+        <Route exact path='/atlantic/ocean' render={() => (
+          <div>
+            <h3>Atlantic Ocean -  Again!</h3>
+            <p>
+              Also known as "The Pond."
+            </p>
+          </div>
+        )} />
+
+        <Route exact path='/' render={() => (
+            <h3 className='ui text center'>
+              Welcome to Works Tracker.
+            </h3>
+        )} />
+
+        <Route exact path='/atlantic' component={Atlantic} />
+        <Route exact path='/pacific' component={Pacific} />
+
+        <Route render={( {location} ) => (
+          <div className='ui inverted red segment'>
+            <h3>
+              Error! No matches for <code>{location.pathname}</code>
+            </h3>
+          </div>
+        )} />
+      </Switch>
     </div>
   </Router>
 );

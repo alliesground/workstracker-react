@@ -4,7 +4,7 @@ export default class Project extends Component {
   render() {
     return (
       <div>
-        <h2>{this.props.title}</h2>
+        <h2>Your Project: {this.props.project.title}</h2>
       </div>
     );
   }
