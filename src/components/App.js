@@ -6,11 +6,14 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom';
-import logo from './logo.svg';
-import './App.css';
-import ApiClient from './ApiClient';
-import {client} from './Client';
+import logo from '../logo.svg';
+import '../App.css';
+import ApiClient from '../ApiClient';
+import {client} from '../Client';
 import ProjectsContainer from './ProjectsContainer';
+import TopBar from './TopBar';
+import Login from './Login';
+import Logout from './Logout';
 
 const PrivateRoute = ({component, ...rest}) => (
   <Route {...rest} render={(props) => (
@@ -36,10 +39,15 @@ const Profile = (props) => (
   </div>
 );*/
 
-
 const App = () => (
   <div className='ui grid container'>
-    <Route path='/projects' component={ProjectsContainer} />
+    <TopBar />
+    <div className='spacer row' />
+    <div className='row'>
+      <Route exact path='/login' component={Login} />
+      <Route exact path='/logout' component={Logout} />
+      <Route path='/projects' component={ProjectsContainer} />
+    </div>
   </div>
 );
 

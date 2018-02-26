@@ -3,7 +3,7 @@ function loadProjects(success) {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNCIsInNjcCI6InVzZXIiLCJhdWQiOm51bGwsImlhdCI6MTUxOTM2MTU1MiwiZXhwIjoxNTE5MzY1MTUyLCJqdGkiOiI1YTE5OWE2Mi1iYWY0LTQ4MTctYThlYS1iYTA3ZjgzNTMzOTUifQ.YXJ_ds4Y9FgMN7ZkPipW7VgIHnhHDRoEZQg1nBqVvHE'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNCIsInNjcCI6InVzZXIiLCJhdWQiOm51bGwsImlhdCI6MTUxOTM2ODk0OCwiZXhwIjoxNTE5MzcyNTQ4LCJqdGkiOiI2ZmEyNWNjZi1lYTFlLTQ1ZDMtYmIxOC0yOGIyNzc4ZDdhZDgifQ.A3fo1qQ-Se24u0CRLBCobxbH8-pnJIT5FB9qQ-Yf5RY'
     }
   }).then(checkStatus)
     .then(parseJson)

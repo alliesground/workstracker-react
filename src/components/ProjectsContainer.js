@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ApiClient from './ApiClient';
-import { client } from './Client';
+import ApiClient from '../ApiClient';
+import { client } from '../Client';
 import { 
   Link,
   Route
@@ -19,12 +19,19 @@ export default class ProjectsContainer extends Component {
   }
 
   getProjects = () => {
-    ApiClient.loadProjects((projects) => {
+    client.getProjects((projects) => {
       this.setState({
         fetched: true,
         projects: projects,
       });
     });
+
+    /*ApiClient.loadProjects((projects) => {
+      this.setState({
+        fetched: true,
+        projects: projects,
+      });
+    });*/
   }
 
   render() {
