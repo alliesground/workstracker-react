@@ -23,7 +23,7 @@ class Client {
     return !!this.token;
   }
 
-  getProjects(success) {
+  getProjects(success, fetchError) {
     return fetch(`/api/v1/projects`, {
       headers: {
         'Accept': 'application/json',
@@ -32,7 +32,13 @@ class Client {
       }
     }).then(this.checkStatus)
       .then(this.parseJson)
-      .then(success);
+      .then(success)
+      .catch(error => this.handleError(error, fetchError));
+  }
+
+  handleError(error, fetchError) {
+    this.token = null
+    fetchError(error);
   }
 
   login(email, password) {

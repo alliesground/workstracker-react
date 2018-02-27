@@ -11,7 +11,9 @@ import ProjectListMenu from './ProjectListMenu';
 export default class ProjectsContainer extends Component {
   state = {
     fetched: false,
-    projects: []
+    projects: [],
+    error: false,
+    errorMessage: ''
   };
 
   componentDidMount() {
@@ -19,25 +21,40 @@ export default class ProjectsContainer extends Component {
   }
 
   getProjects = () => {
-    client.getProjects((projects) => {
-      this.setState({
-        fetched: true,
-        projects: projects,
-      });
-    });
+    client.getProjects(this.handleSuccess, this.handleError);
+  }
 
-    /*ApiClient.loadProjects((projects) => {
-      this.setState({
-        fetched: true,
-        projects: projects,
-      });
-    });*/
+  handleSuccess = (projects) => {
+    this.setState({
+      fetched: true,
+      projects: projects
+    });
+  }
+
+  handleError = (error) => {
+    this.setState({
+      fetched: true,
+      error: true,
+      errorMessage: error.status
+    });
   }
 
   render() {
     if(!this.state.fetched) {
       return (
         <div className='ui active centered inline loader' />
+      );
+    } else if(this.state.error) {
+      return (
+        <div className='column'>
+          <div className='ui negative message'>
+            <i className='close icon'></i>
+            <div className='header'>
+              Error!
+            </div>
+            <p>{this.state.errorMessage}</p>
+          </div>
+        </div>
       );
     } else {
       const matchPath = this.props.match.path;
