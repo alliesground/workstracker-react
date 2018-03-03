@@ -12,14 +12,12 @@ export default class ProjectsContainer extends Component {
   state = {
     fetched: false,
     projects: [],
-    error: false,
-    errorMessage: ''
   };
 
   componentDidMount() {
     this.getProjects();
   }
-
+  
   getProjects = () => {
     client.getProjects(this.handleSuccess, this.handleError);
   }
@@ -32,29 +30,14 @@ export default class ProjectsContainer extends Component {
   }
 
   handleError = (error) => {
-    this.setState({
-      fetched: true,
-      error: true,
-      errorMessage: error.status
-    });
+    console.log("Error caught", error);
+    this.props.handleMessage(error.error);
   }
 
   render() {
     if(!this.state.fetched) {
       return (
         <div className='ui active centered inline loader' />
-      );
-    } else if(this.state.error) {
-      return (
-        <div className='column'>
-          <div className='ui negative message'>
-            <i className='close icon'></i>
-            <div className='header'>
-              Error!
-            </div>
-            <p>{this.state.errorMessage}</p>
-          </div>
-        </div>
       );
     } else {
       const matchPath = this.props.match.path;

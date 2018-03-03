@@ -8,56 +8,54 @@ import {
 } from 'react-router-dom';
 
 const App = () => (
-  <Router>
-    <div className='ui text container'>
-      <h2 className='ui dividing header'>
-        Which body of water?
-      </h2>
+  <div className='ui text container'>
+    <h2 className='ui dividing header'>
+      Which body of water?
+    </h2>
 
-      <ul>
-        <li>
-          <Link to='/atlantic'>
-            <code>/atlantic</code>
-          </Link>
-        </li>
-        <li>
-          <Link to='/pacific'>
-            <code>/pacific</code>
-          </Link>
-        </li>
-      </ul>
+    <ul>
+      <li>
+        <Link to='/atlantic'>
+          <code>/atlantic</code>
+        </Link>
+      </li>
+      <li>
+        <Link to='/pacific'>
+          <code>/pacific</code>
+        </Link>
+      </li>
+    </ul>
 
-      <hr />
-      {/* We'll insert the Route component here */}
-      <Switch>
-        <Route exact path='/atlantic/ocean' render={() => (
-          <div>
-            <h3>Atlantic Ocean -  Again!</h3>
-            <p>
-              Also known as "The Pond."
-            </p>
-          </div>
-        )} />
+    <hr />
+    {/* We'll insert the Route component here */}
+    <Switch>
+      <Route exact path='/atlantic/ocean' render={() => (
+        <div>
+          <h3>Atlantic Ocean -  Again!</h3>
+          <p>
+            Also known as "The Pond."
+          </p>
+        </div>
+      )} />
 
-        <Route exact path='/' render={() => (
-            <h3 className='ui text center'>
-              Welcome to Works Tracker.
-            </h3>
-        )} />
+      <Route exact path='/' render={() => (
+          <h3 className='ui text center'>
+            Welcome to Works Tracker.
+          </h3>
+      )} />
 
-        <Route exact path='/atlantic' component={Atlantic} />
-        <Route exact path='/pacific' component={Pacific} />
+      <Route exact path='/atlantic' component={Atlantic} />
+      <Route exact path='/pacific' component={Pacific} />
 
-        <Route render={( {location} ) => (
-          <div className='ui inverted red segment'>
-            <h3>
-              Error! No matches for <code>{location.pathname}</code>
-            </h3>
-          </div>
-        )} />
-      </Switch>
-    </div>
-  </Router>
+      <Route render={( {location} ) => (
+        <div className='ui inverted red segment'>
+          <h3>
+            Error! No matches for <code>{location.pathname}</code>
+          </h3>
+        </div>
+      )} />
+    </Switch>
+  </div>
 );
 
 const Atlantic = () => (

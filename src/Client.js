@@ -23,7 +23,7 @@ class Client {
     return !!this.token;
   }
 
-  getProjects(success, fetchError) {
+  getProjects(successHandler, errorHandler) {
     return fetch(`/api/v1/projects`, {
       headers: {
         'Accept': 'application/json',
@@ -32,16 +32,16 @@ class Client {
       }
     }).then(this.checkStatus)
       .then(this.parseJson)
-      .then(success)
-      .catch(error => this.handleError(error, fetchError));
+      .then(successHandler)
+      .catch(error => this.handleError(error, errorHandler));
   }
 
-  handleError(error, fetchError) {
-    this.token = null
-    fetchError(error);
+  handleError(error, errorHandler) {
+    this.removeToken();
+    errorHandler(error);
   }
 
-  login(email, password) {
+  login(email, password, errorHandler) {
     const searchParams = new URLSearchParams();
     searchParams.set('user[email]', email);
     searchParams.set('user[password]', password);
@@ -54,7 +54,8 @@ class Client {
       },
       body: searchParams
     }).then(this.checkStatus)
-      .then((res) => this.setToken(res.headers.get('authorization')));
+      .then((res) => this.setToken(res.headers.get('authorization')))
+      .catch(error => this.handleError(error, errorHandler));
   }
 
   logout() {
@@ -73,11 +74,19 @@ class Client {
     if (response.status >= 200 && response.status < 300) {
       return response;
     } else {
-      const error = new Error(`HTTP Error ${response.statusText}`);
+      return response.json()
+        .then((json) => {
+          const error = Object.assign({}, json, {
+            status: response.status,
+            statusText: response.statusText
+          })
+          return Promise.reject(error);
+        });
+      /*const error = new Error(`HTTP Error ${response.statusText}`);
       error.status = response.statusText;
       error.response = response;
       console.log(error);
-      throw error;
+      throw error;*/
     }
   }
 

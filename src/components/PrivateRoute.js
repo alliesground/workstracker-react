@@ -5,14 +5,23 @@ import {
 } from 'react-router-dom';
 import { client } from '../Client';
 
-const PrivateRoute = ({ component, ...rest }) => (
-  <Route {...rest} render={(props) => (
-    client.isLoggedIn() ? (
-      React.createElement(component, props)
-    ) : (
-      <Redirect to={{pathname: '/login'}} />
-    )
-  )} />
-);
+const renderMergedProps = (component, ...rest) => {
+  const finalProps = Object.assign({}, ...rest);
+  return (
+    React.createElement(component, finalProps)
+  );
+};
+
+const PrivateRoute = ({ component, ...rest }) => {
+  return (
+    <Route {...rest} render={props => {
+      return client.isLoggedIn() ? (
+        renderMergedProps(component, props, rest)
+      ) : (
+        <Redirect to={{pathname: '/login'}} />
+      )
+    }} />
+  );
+};
 
 export default PrivateRoute;

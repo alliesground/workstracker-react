@@ -10,12 +10,14 @@ export default class Login extends Component {
     },
     loginProgress: false,
     shouldRedirect: false,
+    hasError: false,
+    error: null
   };
 
   handleFormSubmit = (e) => {
     e.preventDefault();
     this.setState({ loginProgress: true });
-    client.login(this.state.fields.email, this.state.fields.password)
+    client.login(this.state.fields.email, this.state.fields.password, this.handleError)
       .then(() => (
         this.setState({ 
           shouldRedirect: true,
@@ -27,6 +29,10 @@ export default class Login extends Component {
       ));
   };
 
+  handleError = (error) => {
+    this.setState({hasError: true, error: error});
+  }
+
   handleFormInputChange = (e) => {
     const fields = this.state.fields;
     fields[e.target.name] = e.target.value;
@@ -34,7 +40,9 @@ export default class Login extends Component {
   };
 
   render() {
-    if (this.state.shouldRedirect) {
+    if (this.state.hasError) {
+      throw new Error(this.state.error);
+    } else if (this.state.shouldRedirect) {
       return (
         <Redirect to='/projects' />
       );

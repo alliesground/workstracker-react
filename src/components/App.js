@@ -11,33 +11,62 @@ import TopBar from './TopBar';
 import Login from './Login';
 import Logout from './Logout';
 import PrivateRoute from './PrivateRoute';
+import Message from './Message';
 
-const App = () => (
-  <div className='ui grid container'>
-    <TopBar />
-    <div className='spacer row' />
-    <div className='row'>
-      <Switch>
-        <Route
-          exact path='/' 
-          render={() => {
-            return (
-              <div>
-                <h2>Home page</h2>
-              </div>
-            );
-          }} 
-        />
+class App extends Component {
+  state = {
+    hasMessage: false,
+    message: null
+  };
 
-        <PrivateRoute
-          path='/projects'
-          component={ProjectsContainer} 
-        />
-        <Route path='/login' component={Login} />
-        <Route path='/logout' component={Logout} />
-      </Switch>
-    </div>
-  </div>
-);
+  handleMessage = (message) => {
+    this.setState({
+      hasMessage: true,
+      message: message
+    });
+  }
+
+  render() {
+    return (
+      <div className='ui grid container'>
+        <TopBar />
+        <div className='spacer row' />
+        { 
+          this.state.hasMessage ? (
+            <div className='row'>
+              <Message 
+                message={this.state.message}
+              />
+            </div>
+          ) : (
+            false
+          )
+        }
+        <div className='row'>
+          <Switch>
+            <Route
+              exact path='/' 
+              render={() => {
+                return (
+                  <div>
+                    <h2>Home page</h2>
+                  </div>
+                );
+              }} 
+            />
+
+            <PrivateRoute
+              path='/projects'
+              component={ProjectsContainer}
+              handleMessage={this.handleMessage}
+            />
+            <Route path='/login' component={Login} />
+            <Route path='/logout' component={Logout} />
+          </Switch>
+        </div>
+      </div>
+    );
+  }
+}
 
 export default App;
