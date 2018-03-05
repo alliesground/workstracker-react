@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
-import { 
+import {
   Route,
   Redirect
 } from 'react-router-dom';
 import { client } from '../Client';
-
-const renderMergedProps = (component, ...rest) => {
-  const finalProps = Object.assign({}, ...rest);
-  return (
-    React.createElement(component, finalProps)
-  );
-};
+import withMergedProps from './WithMergedProps';
 
 const PrivateRoute = ({ component, ...rest }) => {
   return (
     <Route {...rest} render={props => {
       return client.isLoggedIn() ? (
-        renderMergedProps(component, props, rest)
+        withMergedProps(component, props, rest)
       ) : (
         <Redirect to={{pathname: '/login'}} />
       )

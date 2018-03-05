@@ -16,6 +16,9 @@ const TopBar = () => (
       </h1>
     </div>
     <div className='right menu'>
+      <Link className='ui item' to='/'>Home</Link>
+      <Link className='ui item' to='/projects'>Projects</Link>
+      <Link className='ui item' to='/profile'>Profile</Link>
       {
         client.isLoggedIn() ? (
           <Link className='ui item' to='/logout'>

@@ -15,6 +15,7 @@ export default class ProjectsContainer extends Component {
   };
 
   componentDidMount() {
+    console.log(this.props);
     this.getProjects();
   }
   
