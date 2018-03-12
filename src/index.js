@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import './index.css';
-import App from './components/App';
+import App from './redux-example/App-v3';
 import registerServiceWorker from './registerServiceWorker';
 import 'semantic-ui-css/semantic.min.css';
 
