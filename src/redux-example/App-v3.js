@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { createStore, combineReducers } from 'redux';
 import uuid from 'uuid';
-
+import { Provider, connect } from 'react-redux';
 
 const reducer = (state = {}, action) => {
   return {
