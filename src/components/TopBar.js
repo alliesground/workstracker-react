@@ -1,10 +1,8 @@
 import React from 'react';
-
 import { Link } from 'react-router-dom';
-
 import { client } from '../Client';
 
-const TopBar = () => (
+const TopBar = (props) => (
   <div className='ui huge top attached fluid secondary menu'>
     <div className='item' />
     <div className='item'>
@@ -32,6 +30,6 @@ const TopBar = () => (
       }
     </div>
   </div>
-);
+); 
 
 export default TopBar;

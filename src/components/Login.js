@@ -19,7 +19,7 @@ export default class Login extends Component {
     this.setState({ loginProgress: true });
     client.login(this.state.fields.email, this.state.fields.password, this.handleError)
       .then(() => (
-        this.setState({ 
+        this.setState({
           shouldRedirect: true,
           fields: {
             email: '',
@@ -53,7 +53,7 @@ export default class Login extends Component {
             <div className='ui raised very padded text container segment'> 
               <h2 className='ui green header'>Login</h2>
               {
-                this.state.loginInProgress ? (
+                this.state.loginProgress ? (
                   <div 
                     className='ui active centered inline loader' 
                   />

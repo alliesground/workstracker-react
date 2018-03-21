@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-const Message = (props) => (
+const Message = ({ message }) => (
   <div className='ui inverted red segment'>
     <h3>
-      Error! {props.message}
+      {message}
     </h3>
   </div>
 )

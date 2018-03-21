@@ -36,12 +36,12 @@ class Client {
       .catch(error => this.handleError(error, errorHandler));
   }
 
-  handleError(error, errorHandler) {
+  handleLoginError(error) {
     this.removeToken();
-    errorHandler(error);
+    return Promise.reject(error);
   }
 
-  login(email, password, errorHandler) {
+  login(email, password) {
     const searchParams = new URLSearchParams();
     searchParams.set('user[email]', email);
     searchParams.set('user[password]', password);
@@ -54,8 +54,12 @@ class Client {
       },
       body: searchParams
     }).then(this.checkStatus)
-      .then((res) => this.setToken(res.headers.get('authorization')))
-      .catch(error => this.handleError(error, errorHandler));
+      .then(
+        (response) => {
+          this.setToken(response.headers.get('authorization'))
+        }
+      )
+      .catch(error => this.handleLoginError(error));
   }
 
   logout() {

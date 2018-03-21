@@ -8,42 +8,12 @@ import '../App.css';
 import {client} from '../Client';
 import ProjectsContainer from './ProjectsContainer';
 import TopBar from './TopBar';
-import Login from './Login';
-import Logout from './Logout';
-import PrivateRoute from './PrivateRoute';
+import Login from '../containers/Login';
+import Logout from '../containers/Logout';
+import PrivateRoute from '../hocs/PrivateRoute';
 import Message from './Message';
 import Profile from './Profile';
-import RouteWithProps from './RouteWithProps';
-
-class DivWithFlashMessage extends Component {
-  state = {
-    hasMessage: false,
-    message: 'Something went wrong'
-  }
-
-  handleMessage = (hasMessage, message) => {
-    this.setState({
-      hasMessage: hasMessage,
-      message: message
-    });
-  }
-
-  render() {
-    const children = this.props.children;
-    const childrenWithProps = React.Children.map(children, (child) => 
-      React.cloneElement(child,  { handleMessage: this.handleMessage } )
-    );
-
-    return(
-      <div>
-        <div className='row'>
-          {this.state.hasMessage && <Message message={this.state.message} />}
-        </div>
-        {childrenWithProps}
-      </div>
-    );
-  }
-}
+import RouteWithProps from '../hocs/RouteWithProps';
 
 class App extends Component {
   render() {
@@ -53,26 +23,24 @@ class App extends Component {
         <div className='spacer row' />
         <div className='row'>
           <Switch>
-            <DivWithFlashMessage>
-              <Route
-                exact path='/'
-                render={() => {
-                  return (
-                    <div>
-                      <h2>Home page</h2>
-                    </div>
-                  );
-                }}
-              />
+            <Route
+              exact path='/'
+              render={() => {
+                return (
+                  <div>
+                    <h2>Home page</h2>
+                  </div>
+                );
+              }}
+            />
 
-              <PrivateRoute
-                path='/projects'
-                component={ProjectsContainer}
-              />
-              <Route path='/login' component={Login} />
-              <Route path='/logout' component={Logout} />
-              <RouteWithProps path='/profile' component={Profile} />
-            </DivWithFlashMessage>
+            <PrivateRoute
+              path='/projects'
+              component={ProjectsContainer}
+            />
+            <Route path='/login' component={Login} />
+            <Route path='/logout' component={Logout} />
+            <Route path='/profile' component={Profile} />
           </Switch>
         </div>
       </div>
