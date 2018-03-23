@@ -6,7 +6,7 @@ import {
 import logo from '../logo.svg';
 import '../App.css';
 import {client} from '../Client';
-import ProjectsContainer from './ProjectsContainer';
+import Projects from '../containers/Projects';
 import TopBar from './TopBar';
 import Login from '../containers/Login';
 import Logout from '../containers/Logout';
@@ -36,7 +36,7 @@ class App extends Component {
 
             <PrivateRoute
               path='/projects'
-              component={ProjectsContainer}
+              component={Projects}
             />
             <Route path='/login' component={Login} />
             <Route path='/logout' component={Logout} />

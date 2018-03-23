@@ -5,10 +5,10 @@ import {
   Link,
   Route
 } from 'react-router-dom';
-import Project from './Project';
-import ProjectListMenu from './ProjectListMenu';
+import Project from '../components/Project';
+import ProjectListMenu from '../components/ProjectListMenu';
 
-export default class ProjectsContainer extends Component {
+export default class Projects extends Component {
   state = {
     fetched: false,
     projects: [],
