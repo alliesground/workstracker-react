@@ -25,6 +25,7 @@ export default (state = initialState, action) => {
     case types.LOGIN_SUCCESS:
       return {
         ...state,
+        loginProgress: false,
         shouldRedirect: true
       }
     case types.LOGIN_FAILURE:
@@ -34,6 +35,7 @@ export default (state = initialState, action) => {
       }
     case types.LOGOUT:
       return {
+        ...state,
         shouldRedirect: false,
         loginProgress: false
       }
@@ -44,9 +46,9 @@ export default (state = initialState, action) => {
 }
 
 const login = (email, password) => ((dispatch) => {
-  dispatch(actions.loginProgress(true))
+  dispatch(actions.loginProgress(true));
 
-  return client.login(email, password).then(
+  client.login(email, password).then(
       (response) => {
         dispatch(actions.loginSuccess());
       },

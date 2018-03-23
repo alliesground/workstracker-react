@@ -20,12 +20,12 @@ class Login extends Component {
 
   componentWillUnmount = () => {
     this.props.resetFlashMessage();
-    this.setState({
+    /*this.setState({
       fields: {
         email: '',
         password: ''
       }
-    })
+    })*/
   }
 
   handleFormSubmit = (e) => {

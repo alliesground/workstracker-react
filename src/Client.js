@@ -99,7 +99,6 @@ class Client {
   }
 
   setToken(token) {
-    console.log("Token => " + token);
     this.token = token;
 
     if (this.useLocalStorage) {
