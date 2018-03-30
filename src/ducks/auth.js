@@ -4,7 +4,7 @@ import {
 } from './flash_message';
 
 export const types = {
-  LOGIN_PROGRESS: 'LOGIN_PROGRESS',
+  LOGIN_REQUEST: 'LOGIN_REQUEST',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGIN_FAILURE: 'LOGIN_FAILURE',
   LOGOUT: 'LOGOUT'
@@ -17,10 +17,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.LOGIN_PROGRESS:
+    case types.LOGIN_REQUEST:
       return {
         ...state,
-        loginProgress: action.bool
+        loginProgress: true
       };
     case types.LOGIN_SUCCESS:
       return {
@@ -46,7 +46,7 @@ export default (state = initialState, action) => {
 }
 
 const login = (email, password) => ((dispatch) => {
-  dispatch(actions.loginProgress(true));
+  dispatch(actions.loginRequest());
 
   client.login(email, password).then(
       (response) => {
@@ -63,9 +63,8 @@ const login = (email, password) => ((dispatch) => {
 
 export const actions = {
   login,
-  loginProgress: (bool) => ({
-    type: types.LOGIN_PROGRESS,
-    bool
+  loginRequest: () => ({
+    type: types.LOGIN_REQUEST
   }),
   loginSuccess: () => ({
     type: types.LOGIN_SUCCESS

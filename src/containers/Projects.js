@@ -7,35 +7,16 @@ import {
 } from 'react-router-dom';
 import Project from '../components/Project';
 import ProjectListMenu from '../components/ProjectListMenu';
+import { connect } from 'react-redux';
+import { actions, selectors } from '../ducks/projects/index';
 
-export default class Projects extends Component {
-  state = {
-    fetched: false,
-    projects: [],
-  };
-
+class Projects extends Component {
   componentDidMount() {
-    this.getProjects();
-  }
-  
-  getProjects = () => {
-    client.getProjects(this.handleSuccess, this.handleError);
-  }
-
-  handleSuccess = (projects) => {
-    this.setState({
-      fetched: true,
-      projects: projects
-    });
-  }
-
-  handleError = (error) => {
-    console.log("Error caught", error);
-    this.props.handleMessage(error.error);
+    this.props.fetchProjects();
   }
 
   render() {
-    if(!this.state.fetched) {
+    if(this.props.isFetching) {
       return (
         <div className='ui active centered inline loader' />
       );
@@ -44,8 +25,8 @@ export default class Projects extends Component {
       return (
         <div className='ui two column divided grid'>
           <div className='ui six wide column'>
-            <ProjectListMenu 
-              projects={this.state.projects}
+            <ProjectListMenu
+              projects={this.props.projects}
               projectsPath={matchPath}
             />
           </div>
@@ -54,7 +35,7 @@ export default class Projects extends Component {
             <Route
               path={`${matchPath}/:projectId`}
               render={({ match }) => {
-                const project = this.state.projects.find(
+                const project = this.props.projects.find(
                   (p) => p.id == match.params.projectId
                 );
 
@@ -71,3 +52,24 @@ export default class Projects extends Component {
     }
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    projects: selectors.getProjects(state.projects),
+    isFetching: selectors.getIsFetching(state.projects)
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchProjects: () => (
+      dispatch(actions.fetchProjects())
+    )
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Projects);
+
