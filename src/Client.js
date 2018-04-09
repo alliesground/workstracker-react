@@ -24,7 +24,7 @@ class Client {
   }
 
   getProjects() {
-    return fetch(`/api/v1/projects`, {
+    return fetch(`/api/projects`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

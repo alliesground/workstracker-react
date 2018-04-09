@@ -16,4 +16,3 @@ export default (state = {}, action) => {
 export const selectors = {
   getProject : (state, id) => state[id]
 }
-

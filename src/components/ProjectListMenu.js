@@ -14,7 +14,7 @@ const ProjectListMenu = ({ projects, projectsPath }) => (
           className='item'
           key={project.id}
         >
-          {project.title}
+          {project.attributes.title}
         </NavLink>
       ))
     }
