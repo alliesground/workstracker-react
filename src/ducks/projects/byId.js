@@ -8,6 +8,11 @@ export default (state = {}, action) => {
         nextState[project.id] = project;
       });
       return nextState;
+    case types.CREATE_PROJECT_SUCCESS:
+      return{
+        ...state,
+        [action.response.id]: action.response.attributes
+      }
     default:
       return state;
   }

@@ -26,6 +26,16 @@ const fetchProjects = () => ((dispatch) => {
   )
 })
 
+const createProject = (project) => ((dispatch) => {
+  dispatch(actions.createProjectRequest());
+
+  client.createProject(project).then(
+    (response) => {
+      dispatch(actions.createProjectSuccess(response.data));
+    }
+  )
+})
+
 export const actions = {
   fetchProjects,
   fetchProjectsRequest: () => ({
@@ -37,6 +47,14 @@ export const actions = {
   }),
   fetchProjectsFailure: () => ({
     type: types.FETCH_PROJECTS_FAILURE
+  }),
+  createProject,
+  createProjectRequest: () => ({
+    type: types.CREATE_PROJECT_REQUEST
+  }),
+  createProjectSuccess: (response) => ({
+    type: types.CREATE_PROJECT_SUCCESS,
+    response
   })
 }
 

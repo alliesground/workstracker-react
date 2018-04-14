@@ -34,15 +34,28 @@ class Client {
       .then(this.parseJson);
   }
 
+  createProject(project) {
+    return fetch(`/api/projects`, {
+      body: JSON.stringify(project),
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': this.token
+      }
+    }).then(this.checkStatus)
+      .then(this.parseJson);
+  }
+
   handleLoginError(error) {
     this.removeToken();
     return Promise.reject(error);
   }
 
   login(email, password) {
-    const searchParams = new URLSearchParams();
-    searchParams.set('user[email]', email);
-    searchParams.set('user[password]', password);
+    const data = new URLSearchParams();
+    data.set('user[email]', email);
+    data.set('user[password]', password);
 
     return fetch(`/users/sign_in`, {
       method: 'post',
@@ -50,7 +63,7 @@ class Client {
         accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
-      body: searchParams
+      body: data
     }).then(this.checkStatus)
       .then(
         (response) => {
