@@ -9,14 +9,15 @@ const ProjectListMenu = ({ projects, projectsPath }) => (
     </div>
     {
       projects.map((project) => (
-        <NavLink
-          to={`${projectsPath}/${project.id}`}
-          className='item'
-          key={project.id}
-        >
-          {project.attributes.title}
-        </NavLink>
-      ))
+          <NavLink
+            to={`${projectsPath}/${project.id}`}
+            className='item'
+            key={project.id}
+          >
+            {project.attributes.title}
+          </NavLink>
+        )
+      )
     }
   </div>
 );

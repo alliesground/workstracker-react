@@ -5,6 +5,8 @@ const ids = (state = [], action) => {
   switch (action.type) {
     case types.FETCH_PROJECTS_SUCCESS:
       return action.response.map(project => project.id);
+    case types.CREATE_PROJECT_SUCCESS:
+      return [ ...state, action.response.id ];
     default:
       return state;
   }

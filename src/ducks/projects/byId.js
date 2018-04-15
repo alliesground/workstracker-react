@@ -9,9 +9,9 @@ export default (state = {}, action) => {
       });
       return nextState;
     case types.CREATE_PROJECT_SUCCESS:
-      return{
+      return {
         ...state,
-        [action.response.id]: action.response.attributes
+        [action.response.id]: action.response
       }
     default:
       return state;
