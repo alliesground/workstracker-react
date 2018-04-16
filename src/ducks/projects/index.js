@@ -32,6 +32,9 @@ const createProject = (project) => ((dispatch) => {
   client.createProject(project).then(
     (response) => {
       dispatch(actions.createProjectSuccess(response.data));
+    },
+    (error) => {
+      console.log(error);
     }
   )
 })

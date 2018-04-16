@@ -40,7 +40,7 @@ class Client {
       method: 'post',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/vnd.api+json',
         'Authorization': this.token
       }
     }).then(this.checkStatus)
@@ -91,12 +91,19 @@ class Client {
     } else {
       return response.json()
         .then((json) => {
+          const error = json
+          return Promise.reject(error);
+        });
+
+      /*return response.json()
+        .then((json) => {
           const error = Object.assign({}, json, {
             status: response.status,
             statusText: response.statusText
           })
           return Promise.reject(error);
-        });
+        });*/
+
       /*const error = new Error(`HTTP Error ${response.statusText}`);
       error.status = response.statusText;
       error.response = response;

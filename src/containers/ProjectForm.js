@@ -16,8 +16,13 @@ export default class ProjectForm extends Component {
 
   handleSubmit = () => {
     this.props.onFormSubmit({
-      title: this.state.title,
-      description: this.state.description
+      data: {
+        type: 'projects',
+        attributes: {
+          title: this.state.title,
+          description: this.state.description
+        }
+      }
     });
   }
 
@@ -26,13 +31,14 @@ export default class ProjectForm extends Component {
       <div className='ui card'>
         <div className='content'>
           <div className='ui form'>
-            <div className='field'>
+            <div className='field error'>
               <label>Title</label>
               <input 
                 type='text' 
                 value={this.state.title}
                 onChange={this.handleTitleChange}
               />
+              
             </div>
             <div className='field'>
               <label>Description</label>
