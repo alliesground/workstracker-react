@@ -27,7 +27,6 @@ class Client {
     return fetch(`/api/projects`, {
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
         'Authorization': this.token
       }
     }).then(this.checkStatus)
@@ -83,17 +82,14 @@ class Client {
       }
     }).then(this.checkStatus)
       .then(this.removeToken());
-  }
+  } 
 
-  checkStatus(response) {
+  checkStatus = (response) => {
     if (response.status >= 200 && response.status < 300) {
       return response;
     } else {
-      return response.json()
-        .then((json) => {
-          const error = json
-          return Promise.reject(error);
-        });
+      const error = this.parseJsonError(response);
+      return Promise.reject(error);
 
       /*return response.json()
         .then((json) => {
@@ -110,6 +106,23 @@ class Client {
       console.log(error);
       throw error;*/
     }
+  }
+
+  parseJsonError = (response) => {
+    const error = {}
+
+    response.json()
+      .then(json => {
+        json.errors.forEach((e) => {
+          error[this.getErrorSource(e.source)] = e.detail;
+        });
+      });
+
+    return error;
+  }
+
+  getErrorSource = (errorSource) => {
+    return (errorSource.pointer.split('/').pop());
   }
 
   parseJson(response) {

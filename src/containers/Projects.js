@@ -10,14 +10,11 @@ import ProjectListMenu from '../components/ProjectListMenu';
 import { connect } from 'react-redux';
 import { actions, selectors } from '../ducks/projects/index';
 import ToggleableProjectForm from '../containers/ToggleableProjectForm'
+import { SubmissionError } from 'redux-form';
 
 class Projects extends Component {
   componentDidMount() {
     this.props.fetchProjects();
-  }
-
-  handleCreateFormSubmit = (project) => {
-    this.props.createProject(project)
   }
 
   render() {
@@ -35,9 +32,7 @@ class Projects extends Component {
               projectsPath={matchPath}
             />
 
-            <ToggleableProjectForm
-              onFormSubmit={this.handleCreateFormSubmit}
-            />
+            <ToggleableProjectForm />
           </div>
 
           <div className='ui ten wide column'>
@@ -73,9 +68,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchProjects: () => (
       dispatch(actions.fetchProjects())
-    ),
-    createProject: (project) => (
-      dispatch(actions.createProject(project))
     )
   }
 }

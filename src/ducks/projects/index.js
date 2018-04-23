@@ -4,6 +4,7 @@ import byId, { selectors as byIdSelectors } from './byId';
 import list, { selectors as listSelectors } from './list';
 import { types } from './types';
 import { actions as flashMessageActions } from '../flash_message';
+import { SubmissionError } from 'redux-form';
 
 export default combineReducers({
   byId,
@@ -29,12 +30,12 @@ const fetchProjects = () => ((dispatch) => {
 const createProject = (project) => ((dispatch) => {
   dispatch(actions.createProjectRequest());
 
-  client.createProject(project).then(
+  return client.createProject(project).then(
     (response) => {
       dispatch(actions.createProjectSuccess(response.data));
     },
     (error) => {
-      console.log(error);
+      throw error;
     }
   )
 })

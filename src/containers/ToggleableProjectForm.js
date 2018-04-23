@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import ProjectForm from './ProjectForm'
+import { SubmissionError } from 'redux-form';
+import { connect } from 'react-redux';
+import { actions } from '../ducks/projects/index';
 
-export default class ToggleableProjectForm extends Component {
+class ToggleableProjectForm extends Component {
   state = {
     isOpen: false
   }
@@ -10,20 +13,40 @@ export default class ToggleableProjectForm extends Component {
     this.setState({ isOpen: true });
   }
 
-  handleFormClose = () => {
+  handleFormClose = (e) => {
+    e.preventDefault();
     this.setState({ isOpen: false });
   }
 
-  handleFormSubmit = (project) => {
-    this.props.onFormSubmit(project)
-    this.setState({ isOpen: false })
+  handleSubmit = (project) => {
+    const project_payload = Object.assign({}, {
+      data: {
+        type: 'projects',
+        attributes: {
+          title: project.title,
+          description: project.description
+        }
+      }
+    });
+
+    return this.props.createProject(project_payload)
+      .then(() => {
+        this.setState({ isOpen: false })
+      })
+      .catch(error => {
+        console.log('Error', error);
+        throw new SubmissionError({
+          ...error,
+          _error: 'Project creation failed!'
+        })
+      });
   }
 
   render() {
     if (this.state.isOpen) {
       return (
         <ProjectForm
-          onFormSubmit={this.handleFormSubmit}
+          onSubmit={this.handleSubmit}
           onFormClose={this.handleFormClose}
         />
       );
@@ -41,3 +64,17 @@ export default class ToggleableProjectForm extends Component {
     }
   }
 }
+
+const mapStateToProps = (state) => ({})
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createProject: (project) => (
+      dispatch(actions.createProject(project))
+    )
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ToggleableProjectForm);
