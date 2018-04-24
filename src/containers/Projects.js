@@ -13,6 +13,7 @@ import ToggleableProjectForm from '../containers/ToggleableProjectForm'
 import { SubmissionError } from 'redux-form';
 
 class Projects extends Component {
+
   componentDidMount() {
     this.props.fetchProjects();
   }
@@ -23,7 +24,9 @@ class Projects extends Component {
         <div className='ui active centered inline loader' />
       );
     } else {
-      const matchPath = this.props.match.path;
+
+      const matchPath = this.props.match.path; 
+
       return (
         <div className='ui two column divided grid'>
           <div className='ui six wide column'>
