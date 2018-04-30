@@ -7,7 +7,8 @@ export const types = {
   LOGIN_REQUEST: 'LOGIN_REQUEST',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGIN_FAILURE: 'LOGIN_FAILURE',
-  LOGOUT: 'LOGOUT'
+  LOGOUT: 'LOGOUT',
+  RESET_SHOULD_REDIRECT: 'RESET_SHOULD_REDIRECT'
 }
 
 const initialState = {
@@ -24,7 +25,6 @@ export default (state = initialState, action) => {
       };
     case types.LOGIN_SUCCESS:
       return {
-        ...state,
         loginProgress: false,
         shouldRedirect: true
       }
@@ -35,9 +35,13 @@ export default (state = initialState, action) => {
       }
     case types.LOGOUT:
       return {
-        ...state,
         shouldRedirect: false,
         loginProgress: false
+      }
+    case types.RESET_SHOULD_REDIRECT:
+      return {
+        ...state,
+        shouldRedirect: false,
       }
     default: {
       return state
@@ -74,5 +78,8 @@ export const actions = {
   }),
   logout: () => ({
     type: types.LOGOUT
+  }),
+  resetShouldRedirect: () => ({
+    type: types.RESET_SHOULD_REDIRECT
   })
 }

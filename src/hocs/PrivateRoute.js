@@ -9,6 +9,7 @@ import withMergedProps from './WithMergedProps';
 const PrivateRoute = ({ component, ...rest }) => {
   return (
     <Route {...rest} render={props => {
+      console.log('LoggedIn?',client.isLoggedIn());
       return client.isLoggedIn() ? (
         withMergedProps(component, props, rest)
       ) : (

@@ -4,10 +4,9 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from '../ducks/auth';
 import { 
-  actions as flashMessageActions 
+  actions as flashMessageActions
 } from '../ducks/flash_message';
 
-import { getFlashMessage } from '../ducks/flash_message';
 import Message from '../components/Message';
 
 class Login extends Component {
@@ -20,12 +19,7 @@ class Login extends Component {
 
   componentWillUnmount = () => {
     this.props.resetFlashMessage();
-    /*this.setState({
-      fields: {
-        email: '',
-        password: ''
-      }
-    })*/
+    this.props.resetShouldRedirect();
   }
 
   handleFormSubmit = (e) => {
@@ -35,21 +29,6 @@ class Login extends Component {
       this.state.fields.password
     );
   }
-
-  /*handleFormSubmit = (e) => {
-    e.preventDefault();
-    this.props.login(
-      this.state.fields.email, 
-      this.state.fields.password
-    ).then(() => {
-      this.setState({
-        fields: {
-          email: '',
-          password: ''
-        }
-      })
-    });
-  }*/
 
   handleFormInputChange = (e) => {
     const fields = this.state.fields;
@@ -64,49 +43,40 @@ class Login extends Component {
       );
     } else {
       return (
-        <div>
-          {
-            this.props.flashMessage ? (
-              <Message message={this.props.flashMessage} />
-            ) : (
-              null
-            )
-          }
-          <div className='ui one column centered grid'>
-            <div className='ten wide column'>
-              <div className='ui raised very padded text container segment'>
-                <h2 className='ui green header'>Login</h2>
-                {
-                  this.props.loginProgress ? (
-                    <div 
-                      className='ui active centered inline loader'
+        <div className='ui one column centered grid'>
+          <div className='ten wide column'>
+            <div className='ui raised very padded text container segment'>
+              <h2 className='ui green header'>Login</h2>
+              {
+                this.props.loginProgress ? (
+                  <div 
+                    className='ui active centered inline loader'
+                  />
+                ) : (
+                  <form onSubmit={this.handleFormSubmit}>
+                    <input
+                      type='email'
+                      name='email'
+                      placeholder='Email'
+                      value={this.state.fields.email}
+                      onChange={this.handleFormInputChange}
                     />
-                  ) : (
-                    <form onSubmit={this.handleFormSubmit}>
-                      <input
-                        type='email'
-                        name='email'
-                        placeholder='Email'
-                        value={this.state.fields.email}
-                        onChange={this.handleFormInputChange}
-                      />
 
-                      <input
-                        type='password'
-                        name='password'
-                        placeholder='Password'
-                        value={this.state.fields.password}
-                        onChange={this.handleFormInputChange}
-                      />
+                    <input
+                      type='password'
+                      name='password'
+                      placeholder='Password'
+                      value={this.state.fields.password}
+                      onChange={this.handleFormInputChange}
+                    />
 
-                      <input
-                        type='submit'
-                        className='ui large green submit button'
-                      />
-                    </form>
-                  )
-                }
-              </div>
+                    <input
+                      type='submit'
+                      className='ui large green submit button'
+                    />
+                  </form>
+                )
+              }
             </div>
           </div>
         </div>
@@ -118,8 +88,7 @@ class Login extends Component {
 const mapStateToProps = (state) => {
   return {
     shouldRedirect: state.auth.shouldRedirect,
-    loginProgress: state.auth.loginProgress,
-    flashMessage: getFlashMessage(state)
+    loginProgress: state.auth.loginProgress
   };
 }
 
@@ -130,6 +99,9 @@ const mapDispatchToProps = (dispatch) => {
     ),
     resetFlashMessage: () => (
       dispatch(flashMessageActions.resetFlashMessage())
+    ),
+    resetShouldRedirect: () => (
+      dispatch(actions.resetShouldRedirect())
     )
   }
 }

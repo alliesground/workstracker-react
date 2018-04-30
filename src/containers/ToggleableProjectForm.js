@@ -65,7 +65,6 @@ class ToggleableProjectForm extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({})
 const mapDispatchToProps = (dispatch) => {
   return {
     createProject: (project) => (
@@ -75,6 +74,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(ToggleableProjectForm);

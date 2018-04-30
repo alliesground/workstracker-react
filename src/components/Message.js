@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-const Message = ({ message }) => (
+const Message = (props) => (
   <div className='ui inverted red segment'>
     <h3>
-      {message}
+      {props.message}
     </h3>
   </div>
-)
+);
 
 export default Message;

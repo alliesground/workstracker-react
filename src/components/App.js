@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
   Route,
-  Switch
+  Switch,
+  withRouter,
 } from 'react-router-dom';
 import logo from '../logo.svg';
 import '../App.css';
@@ -11,9 +12,11 @@ import TopBar from './TopBar';
 import Login from '../containers/Login';
 import Logout from '../containers/Logout';
 import PrivateRoute from '../hocs/PrivateRoute';
-import Message from './Message';
 import Profile from './Profile';
 import RouteWithProps from '../hocs/RouteWithProps';
+import { connect } from 'react-redux';
+import { selectors as flashMessageSelectors } from '../ducks/flash_message';
+import Message from './Message';
 
 class App extends Component {
   render() {
@@ -21,6 +24,13 @@ class App extends Component {
       <div className='ui grid container'>
         <TopBar />
         <div className='spacer row' />
+        {
+          this.props.flashMessage ? (
+            <Message message={this.props.flashMessage} />
+          ) : (
+            null
+          )
+        }
         <div className='row'>
           <Switch>
             <Route
@@ -48,4 +58,13 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    flashMessage: flashMessageSelectors.getFlashMessage(state)
+  }
+}
+
+export default withRouter(connect(
+  mapStateToProps,
+  null
+)(App))

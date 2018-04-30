@@ -1,26 +1,31 @@
 import URLSeachParams from 'url-search-params';
+import jwt_decode from 'jwt-decode';
 
-const LOCAL_STORAGE_KEY = 'sameer';
+const LOCAL_TOKEN_STORAGE_KEY = 'sameer';
+const LOCAL_JWT_EXP_STORAGE_KEY = 'token-exp-time';
 
 class Client {
   constructor() {
     this.useLocalStorage = (typeof localStorage !== 'undefined');
 
     if (this.useLocalStorage) {
-      this.token = localStorage.getItem(LOCAL_STORAGE_KEY);
+      this.token = localStorage.getItem(LOCAL_TOKEN_STORAGE_KEY);
+      this.jwtExpTime = localStorage.getItem(LOCAL_JWT_EXP_STORAGE_KEY);
+    }
+  }
 
-      /*if (this.token) {
-        this.isTokenValid().then((bool) => {
-          if (!bool) {
-            this.token = null;
-          }
-        });
-      }*/
+  isTokenValid = () => {
+    const currentTime = new Date().getTime() / 1000;
+
+    if (currentTime < this.jwtExpTime) {
+      return true;
+    } else { 
+      return false;
     }
   }
 
   isLoggedIn() {
-    return !!this.token;
+    return (this.isTokenValid() && !!this.token);
   }
 
   getProjects() {
@@ -66,11 +71,16 @@ class Client {
     }).then(this.checkStatus)
       .then(
         (response) => {
-          this.setToken(response.headers.get('authorization'))
+          this.setToken(this.getTokenFromHeader(response));
+          this.setJwtExpTime();
         }
       )
       .catch(error => this.handleLoginError(error));
   }
+
+  getTokenFromHeader = (response) => (
+    response.headers.get('authorization').split(' ')[1]
+  )
 
   logout() {
     return fetch(`/users/sign_out`, {
@@ -82,46 +92,58 @@ class Client {
       }
     }).then(this.checkStatus)
       .then(this.removeToken());
-  } 
+  }
 
   checkStatus = (response) => {
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status >= 200 && response.status < 300) { 
       return response;
-    } else {
-      const error = this.parseJsonError(response);
+
+    } else if (response.status == 422) {
+
+      const error = this.parseValidationErrorJson(response);
       return Promise.reject(error);
 
-      /*return response.json()
-        .then((json) => {
+    } else if (response.status == 401) {
+      this.removeToken();
+      return response.json()
+        .then(json => {
           const error = Object.assign({}, json, {
             status: response.status,
             statusText: response.statusText
           })
+          console.log('Json error', error);
           return Promise.reject(error);
-        });*/
+        });
+    } else {
 
-      /*const error = new Error(`HTTP Error ${response.statusText}`);
-      error.status = response.statusText;
-      error.response = response;
-      console.log(error);
-      throw error;*/
+      return response.json()
+        .then(json => {
+          const error = Object.assign({}, json, {
+            status: response.status,
+            statusText: response.statusText
+          })
+          console.log('Json error', error);
+          return Promise.reject(error);
+        });
     }
   }
 
-  parseJsonError = (response) => {
+  parseValidationErrorJson = (response) => {
+    console.log('Response', response);
     const error = {}
 
     response.json()
       .then(json => {
+        console.log('JSON', json);
         json.errors.forEach((e) => {
-          error[this.getErrorSource(e.source)] = e.detail;
+          error[this.getValidationErrorSource(e.source)] = e.detail;
         });
       });
 
     return error;
   }
 
-  getErrorSource = (errorSource) => {
+  getValidationErrorSource = (errorSource) => {
     return (errorSource.pointer.split('/').pop());
   }
 
@@ -130,10 +152,19 @@ class Client {
   }
 
   setToken(token) {
-    this.token = token;
+    this.token = 'Bearer ' + token;
+    console.log(this.token);
 
     if (this.useLocalStorage) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, this.token);
+      localStorage.setItem(LOCAL_TOKEN_STORAGE_KEY, this.token);
+    }
+  }
+
+  setJwtExpTime = () => {
+    this.jwtExpTime = jwt_decode(this.token).exp;
+
+    if (this.useLocalStorage) {
+      localStorage.setItem(LOCAL_JWT_EXP_STORAGE_KEY, this.jwtExpTime)
     }
   }
 
@@ -141,7 +172,7 @@ class Client {
     this.token = null;
 
     if (this.useLocalStorage) {
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
+      localStorage.removeItem(LOCAL_TOKEN_STORAGE_KEY);
     }
   }
 }

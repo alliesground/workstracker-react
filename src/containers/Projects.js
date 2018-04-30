@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ApiClient from '../ApiClient';
 import { client } from '../Client';
-import { 
+import {
   Link,
   Route
 } from 'react-router-dom';
@@ -9,10 +9,19 @@ import Project from '../components/Project';
 import ProjectListMenu from '../components/ProjectListMenu';
 import { connect } from 'react-redux';
 import { actions, selectors } from '../ducks/projects/index';
-import ToggleableProjectForm from '../containers/ToggleableProjectForm'
+import ToggleableProjectForm from '../containers/ToggleableProjectForm';
 import { SubmissionError } from 'redux-form';
+import Message from '../components/Message';
+import {
+  selectors as flashMessageSelectors,
+  actions as flashMessageActions
+} from '../ducks/flash_message';
 
 class Projects extends Component {
+
+  componentWillUnmount() {
+    this.props.resetFlashMessage();
+  }
 
   componentDidMount() {
     this.props.fetchProjects();
@@ -25,7 +34,7 @@ class Projects extends Component {
       );
     } else {
 
-      const matchPath = this.props.match.path; 
+      const matchPath = this.props.match.path;
 
       return (
         <div className='ui two column divided grid'>
@@ -63,7 +72,8 @@ class Projects extends Component {
 const mapStateToProps = (state) => {
   return {
     projects: selectors.getProjects(state.projects),
-    isFetching: selectors.getIsFetching(state.projects)
+    isFetching: selectors.getIsFetching(state.projects),
+    flashMessage: flashMessageSelectors.getFlashMessage(state)
   }
 }
 
@@ -71,6 +81,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchProjects: () => (
       dispatch(actions.fetchProjects())
+    ),
+    resetFlashMessage: () => (
+      dispatch(flashMessageActions.resetFlashMessage())
     )
   }
 }

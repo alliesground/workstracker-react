@@ -28,6 +28,6 @@ export const actions = {
   )
 }
 
-export const getFlashMessage = (state) => {
-  return state.flashMessage;
+export const selectors = {
+  getFlashMessage: (state) => state.flashMessage
 }
