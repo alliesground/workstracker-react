@@ -20,6 +20,7 @@ import {
 class Projects extends Component {
 
   componentWillUnmount() {
+    console.log('Projects Container')
     this.props.resetFlashMessage();
   }
 

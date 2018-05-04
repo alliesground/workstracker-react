@@ -14,18 +14,13 @@ class Client {
     }
   }
 
-  isTokenValid = () => {
+  isTokenExpired = () => {
     const currentTime = new Date().getTime() / 1000;
-
-    if (currentTime < this.jwtExpTime) {
-      return true;
-    } else { 
-      return false;
-    }
+    currentTime > this.jwtExpTime
   }
 
   isLoggedIn() {
-    return (this.isTokenValid() && !!this.token);
+    return (!this.isTokenExpired() && !!this.token);
   }
 
   getProjects() {

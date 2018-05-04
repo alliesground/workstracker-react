@@ -4,9 +4,9 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from '../ducks/auth';
 import { 
-  actions as flashMessageActions
+  actions as flashMessageActions,
+  selectors as flashMessageSelectors
 } from '../ducks/flash_message';
-
 import Message from '../components/Message';
 
 class Login extends Component {
@@ -18,7 +18,8 @@ class Login extends Component {
   }
 
   componentWillUnmount = () => {
-    this.props.resetFlashMessage();
+    console.log('Login Container');
+    //this.props.resetFlashMessage();
     this.props.resetShouldRedirect();
   }
 
@@ -44,6 +45,13 @@ class Login extends Component {
     } else {
       return (
         <div className='ui one column centered grid'>
+          {
+            this.props.flashMessage ? (
+              <Message message={this.props.flashMessage} />
+            ) : (
+              null
+            )
+          }
           <div className='ten wide column'>
             <div className='ui raised very padded text container segment'>
               <h2 className='ui green header'>Login</h2>
@@ -88,7 +96,8 @@ class Login extends Component {
 const mapStateToProps = (state) => {
   return {
     shouldRedirect: state.auth.shouldRedirect,
-    loginProgress: state.auth.loginProgress
+    loginProgress: state.auth.loginProgress,
+    flashMessage: flashMessageSelectors.getFlashMessage(state)
   };
 }
 

@@ -1,6 +1,6 @@
 import { client } from '../Client';
 import { 
-  actions as flashMessageActions 
+  actions as flashMessageActions
 } from './flash_message';
 
 export const types = {
@@ -8,12 +8,14 @@ export const types = {
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGIN_FAILURE: 'LOGIN_FAILURE',
   LOGOUT: 'LOGOUT',
-  RESET_SHOULD_REDIRECT: 'RESET_SHOULD_REDIRECT'
+  RESET_SHOULD_REDIRECT: 'RESET_SHOULD_REDIRECT',
+  SET_IS_LOGGED_IN: 'SET_IS_LOGGED_IN'
 }
 
 const initialState = {
   shouldRedirect: false,
-  loginProgress: false
+  loginProgress: false,
+  isLoggedIn: false
 }
 
 export default (state = initialState, action) => {
@@ -43,11 +45,36 @@ export default (state = initialState, action) => {
         ...state,
         shouldRedirect: false,
       }
+    case types.SET_IS_LOGGED_IN:
+      return {
+        ...state,
+        isLoggedIn: action.bool
+      }
     default: {
       return state
     }
   }
 }
+
+const authenticate = () => (dispatch => {
+  let message = null;
+
+  if(client.isTokenExpired()) {
+    message = 'Token expired'
+  }
+
+  if(!client.token) {
+    message = 'Please signup or signin before continuing'
+  }
+
+  if (client.isLoggedIn()) {
+    dispatch(flashMessageActions.setFlashMessage('Logged in successfully'));
+    dispatch(actions.setIsLoggedIn(true));
+  } else {
+    dispatch(flashMessageActions.setFlashMessage(message));
+    dispatch(actions.setIsLoggedIn(false));
+  }
+});
 
 const login = (email, password) => ((dispatch) => {
   dispatch(actions.loginRequest());
@@ -81,5 +108,10 @@ export const actions = {
   }),
   resetShouldRedirect: () => ({
     type: types.RESET_SHOULD_REDIRECT
+  }),
+  authenticate,
+  setIsLoggedIn: (bool) => ({
+    type: types.SET_IS_LOGGED_IN,
+    bool
   })
 }

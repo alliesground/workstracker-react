@@ -12,6 +12,7 @@ import TopBar from './TopBar';
 import Login from '../containers/Login';
 import Logout from '../containers/Logout';
 import PrivateRoute from '../hocs/PrivateRoute';
+import PrivateRouteContainer from '../containers/PrivateRouteContainer';
 import Profile from './Profile';
 import RouteWithProps from '../hocs/RouteWithProps';
 import { connect } from 'react-redux';
@@ -24,13 +25,15 @@ class App extends Component {
       <div className='ui grid container'>
         <TopBar />
         <div className='spacer row' />
-        {
-          this.props.flashMessage ? (
-            <Message message={this.props.flashMessage} />
-          ) : (
-            null
-          )
-        }
+        <div className='sixteen wide column'>
+          {
+            this.props.flashMessage ? (
+              <Message message={this.props.flashMessage} />
+            ) : (
+              null
+            )
+          }
+        </div>
         <div className='row'>
           <Switch>
             <Route
@@ -44,7 +47,7 @@ class App extends Component {
               }}
             />
 
-            <PrivateRoute
+            <PrivateRouteContainer
               path='/projects'
               component={Projects}
             />
