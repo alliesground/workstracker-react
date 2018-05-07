@@ -1,5 +1,5 @@
 import { client } from '../Client';
-import { 
+import {
   actions as flashMessageActions
 } from './flash_message';
 
@@ -8,8 +8,11 @@ export const types = {
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGIN_FAILURE: 'LOGIN_FAILURE',
   LOGOUT: 'LOGOUT',
-  RESET_SHOULD_REDIRECT: 'RESET_SHOULD_REDIRECT',
-  SET_IS_LOGGED_IN: 'SET_IS_LOGGED_IN'
+  SET_SHOULD_REDIRECT: 'SET_SHOULD_REDIRECT',
+  SET_IS_LOGGED_IN: 'SET_IS_LOGGED_IN',
+  SET_LOGIN_PROGRESS: 'SET_LOGIN_PROGRESS',
+  HANDLE_UNAUTHENTIC_USER: 'HANDLE_UNAUTHENTIC_USER',
+  HANDLE_AUTHENTIC_USER: 'HANDLE_AUTHENTIC_USER'
 }
 
 const initialState = {
@@ -27,8 +30,10 @@ export default (state = initialState, action) => {
       };
     case types.LOGIN_SUCCESS:
       return {
+        ...state,
         loginProgress: false,
-        shouldRedirect: true
+        shouldRedirect: true,
+        isLoggedIn: true
       }
     case types.LOGIN_FAILURE:
       return {
@@ -37,18 +42,39 @@ export default (state = initialState, action) => {
       }
     case types.LOGOUT:
       return {
-        shouldRedirect: false,
-        loginProgress: false
-      }
-    case types.RESET_SHOULD_REDIRECT:
-      return {
         ...state,
         shouldRedirect: false,
+        loginProgress: false,
+        isLoggedIn: false
+      }
+    case types.SET_SHOULD_REDIRECT:
+      return {
+        ...state,
+        shouldRedirect: action.bool,
       }
     case types.SET_IS_LOGGED_IN:
       return {
         ...state,
         isLoggedIn: action.bool
+      }
+    case types.SET_LOGIN_PROGRESS:
+      return {
+        ...state,
+        loginProgress: action.bool
+      }
+    case types.HANDLE_UNAUTHENTIC_USER:
+      return {
+        ...state,
+        shouldRedirect: false,
+        loginProgress: false,
+        isLoggedIn: false
+      }
+    case types.HANDLE_AUTHENTIC_USER:
+      return {
+        ...state,
+        shouldRedirect: true,
+        loginProgress: false,
+        isLoggedIn: true
       }
     default: {
       return state
@@ -56,23 +82,18 @@ export default (state = initialState, action) => {
   }
 }
 
+
 const authenticate = () => (dispatch => {
-  let message = null;
-
-  if(client.isTokenExpired()) {
-    message = 'Token expired'
-  }
-
-  if(!client.token) {
-    message = 'Please signup or signin before continuing'
-  }
-
   if (client.isLoggedIn()) {
-    dispatch(flashMessageActions.setFlashMessage('Logged in successfully'));
     dispatch(actions.setIsLoggedIn(true));
+    dispatch(flashMessageActions.setFlashMessage('Logged in successfully'));
   } else {
-    dispatch(flashMessageActions.setFlashMessage(message));
-    dispatch(actions.setIsLoggedIn(false));
+    dispatch(actions.handleUnauthenticUser);
+    dispatch(flashMessageActions.setFlashMessage('Login first'));
+    /*dispatch(actions.setIsLoggedIn(false));
+    dispatch(actions.setLoginProgress(false));
+    dispatch(actions.setShouldRedirect(false));*/
+    console.log('calling authenticate');
   }
 });
 
@@ -106,12 +127,26 @@ export const actions = {
   logout: () => ({
     type: types.LOGOUT
   }),
-  resetShouldRedirect: () => ({
-    type: types.RESET_SHOULD_REDIRECT
+  setShouldRedirect: (bool) => ({
+    type: types.SET_SHOULD_REDIRECT,
+    bool
   }),
   authenticate,
   setIsLoggedIn: (bool) => ({
     type: types.SET_IS_LOGGED_IN,
     bool
-  })
+  }),
+  setLoginProgress: (bool) => (
+    {
+      type: types.SET_LOGIN_PROGRESS,
+      bool
+    }
+  ),
+  handleUnauthenticUser: () => ({
+    type: types.HANDLE_UNAUTHENTIC_USER
+  }),
+  handleAuthenticUser: () => ({
+    type: types.HANDLE_AUTHENTIC_USER
+  }),
 }
+

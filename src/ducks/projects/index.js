@@ -19,7 +19,7 @@ const fetchProjects = () => ((dispatch) => {
       dispatch(actions.fetchProjectsSuccess(response.data));
     },
     (error) => {
-      dispatch(actions.fetchProjectsFailure());
+      //dispatch(actions.fetchProjectsFailure());
       dispatch(
         flashMessageActions.setFlashMessage(error.error)
       )

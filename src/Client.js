@@ -16,10 +16,14 @@ class Client {
 
   isTokenExpired = () => {
     const currentTime = new Date().getTime() / 1000;
-    currentTime > this.jwtExpTime
+    return (currentTime > this.jwtExpTime);
   }
 
   isLoggedIn() {
+    /*
+    const result = (!this.isTokenExpired() && !!this.token);
+    console.log('Is logged In', result);
+    return result;*/
     return (!this.isTokenExpired() && !!this.token);
   }
 

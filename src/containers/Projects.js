@@ -20,11 +20,11 @@ import {
 class Projects extends Component {
 
   componentWillUnmount() {
-    console.log('Projects Container')
     this.props.resetFlashMessage();
   }
 
   componentDidMount() {
+    console.log('Fetching projects');
     this.props.fetchProjects();
   }
 

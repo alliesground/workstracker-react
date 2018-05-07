@@ -5,9 +5,7 @@ import { connect } from 'react-redux';
 import { actions } from '../ducks/auth';
 import { 
   actions as flashMessageActions,
-  selectors as flashMessageSelectors
 } from '../ducks/flash_message';
-import Message from '../components/Message';
 
 class Login extends Component {
   state = {
@@ -17,10 +15,8 @@ class Login extends Component {
     }
   }
 
-  componentWillUnmount = () => {
-    console.log('Login Container');
-    //this.props.resetFlashMessage();
-    this.props.resetShouldRedirect();
+  componentWillUnmount() {
+    this.props.resetFlashMessage();
   }
 
   handleFormSubmit = (e) => {
@@ -45,13 +41,6 @@ class Login extends Component {
     } else {
       return (
         <div className='ui one column centered grid'>
-          {
-            this.props.flashMessage ? (
-              <Message message={this.props.flashMessage} />
-            ) : (
-              null
-            )
-          }
           <div className='ten wide column'>
             <div className='ui raised very padded text container segment'>
               <h2 className='ui green header'>Login</h2>
@@ -97,7 +86,6 @@ const mapStateToProps = (state) => {
   return {
     shouldRedirect: state.auth.shouldRedirect,
     loginProgress: state.auth.loginProgress,
-    flashMessage: flashMessageSelectors.getFlashMessage(state)
   };
 }
 
@@ -108,9 +96,6 @@ const mapDispatchToProps = (dispatch) => {
     ),
     resetFlashMessage: () => (
       dispatch(flashMessageActions.resetFlashMessage())
-    ),
-    resetShouldRedirect: () => (
-      dispatch(actions.resetShouldRedirect())
     )
   }
 }

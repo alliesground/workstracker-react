@@ -5,13 +5,12 @@ import {
 } from 'react-router-dom';
 import { client } from '../Client';
 import withMergedProps from './WithMergedProps';
+import { connect } from 'react-redux';
 
 const PrivateRoute = ({ isLoggedIn, component, ...rest }) => {
   return (
     <Route {...rest} render={props => {
-      console.log('Rest', rest);
-      console.log('LoggedIn?', isLoggedIn);
-
+      console.log('Private route is loggedin: ', isLoggedIn)
       return isLoggedIn ? ( 
         withMergedProps(component, props, rest)
       ) : (
@@ -21,4 +20,17 @@ const PrivateRoute = ({ isLoggedIn, component, ...rest }) => {
   );
 };
 
-export default PrivateRoute;
+//export default PrivateRoute;
+
+const mapStateToProps = (state) => {
+  return {
+  isLoggedIn: state.auth.isLoggedIn
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(PrivateRoute);
+
+
