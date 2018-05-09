@@ -12,15 +12,16 @@ import { Provider } from 'react-redux';
 import rootReducer from './ducks/index';
 import thunk from 'redux-thunk';
 import { loadState, saveState } from './utils/localStorage';
+import {batchActions, enableBatching, batchDispatchMiddleware} from 'redux-batched-actions';
 
 const persistedState = loadState();
 const store = createStore(
-    rootReducer,
-    persistedState,
-    compose(
-      applyMiddleware(thunk),
-      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__({latency: 0})
-    )
+  rootReducer,
+  persistedState,
+  compose(
+    applyMiddleware(thunk),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__({latency: 0})
+  )
 );
 
 store.subscribe(() => {

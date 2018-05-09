@@ -25,15 +25,13 @@ class App extends Component {
       <div className='ui grid container'>
         <TopBar />
         <div className='spacer row' />
-        <div className='sixteen wide column'>
-          {
-            this.props.flashMessage ? (
-              <Message message={this.props.flashMessage} />
-            ) : (
-              null
-            )
-          }
-        </div>
+        {
+          this.props.flashMessage ? (
+            <Message message={this.props.flashMessage} />
+          ) : (
+            null
+          )
+        }
         <div className='row'>
           <Switch>
             <Route

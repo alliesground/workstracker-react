@@ -67,26 +67,6 @@ const login = (email, password) => ((dispatch) => {
     );
 });
 
-const authenticate = () => ((dispatch) => {
-  console.log('authenticate called');
-  if(!client.isLoggedIn()) {
-    let message = null;
-
-    if (client.isTokenExpired()) {
-      message = 'Your Token expired. Please login again';
-    }
-
-    if (!client.token) {
-      message = 'Please login first';
-    }
-
-    client.removeToken();
-    actions.setShouldRedirect(false);
-    flashMessageActions.setFlashMessage(message);
-  }
-});
-
-
 export const actions = {
   login,
   loginRequest: () => ({
@@ -105,6 +85,5 @@ export const actions = {
     type: types.SET_SHOULD_REDIRECT,
     bool
   }),
-  authenticate
 }
 
