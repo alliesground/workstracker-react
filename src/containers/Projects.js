@@ -24,7 +24,6 @@ class Projects extends Component {
   }
 
   componentDidMount() {
-    console.log('Fetching projects');
     this.props.fetchProjects();
   }
 
