@@ -20,10 +20,6 @@ class Client {
   }
 
   isLoggedIn() {
-    /*
-    const result = (!this.isTokenExpired() && !!this.token);
-    console.log('Is logged In', result);
-    return result;*/
     return (!this.isTokenExpired() && !!this.token);
   }
 

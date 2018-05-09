@@ -9,16 +9,11 @@ export const types = {
   LOGIN_FAILURE: 'LOGIN_FAILURE',
   LOGOUT: 'LOGOUT',
   SET_SHOULD_REDIRECT: 'SET_SHOULD_REDIRECT',
-  SET_IS_LOGGED_IN: 'SET_IS_LOGGED_IN',
-  SET_LOGIN_PROGRESS: 'SET_LOGIN_PROGRESS',
-  HANDLE_UNAUTHENTIC_USER: 'HANDLE_UNAUTHENTIC_USER',
-  HANDLE_AUTHENTIC_USER: 'HANDLE_AUTHENTIC_USER'
 }
 
 const initialState = {
   shouldRedirect: false,
   loginProgress: false,
-  isLoggedIn: false
 }
 
 export default (state = initialState, action) => {
@@ -33,7 +28,6 @@ export default (state = initialState, action) => {
         ...state,
         loginProgress: false,
         shouldRedirect: true,
-        isLoggedIn: true
       }
     case types.LOGIN_FAILURE:
       return {
@@ -45,57 +39,17 @@ export default (state = initialState, action) => {
         ...state,
         shouldRedirect: false,
         loginProgress: false,
-        isLoggedIn: false
       }
     case types.SET_SHOULD_REDIRECT:
       return {
         ...state,
         shouldRedirect: action.bool,
       }
-    case types.SET_IS_LOGGED_IN:
-      return {
-        ...state,
-        isLoggedIn: action.bool
-      }
-    case types.SET_LOGIN_PROGRESS:
-      return {
-        ...state,
-        loginProgress: action.bool
-      }
-    case types.HANDLE_UNAUTHENTIC_USER:
-      return {
-        ...state,
-        shouldRedirect: false,
-        loginProgress: false,
-        isLoggedIn: false
-      }
-    case types.HANDLE_AUTHENTIC_USER:
-      return {
-        ...state,
-        shouldRedirect: true,
-        loginProgress: false,
-        isLoggedIn: true
-      }
     default: {
       return state
     }
   }
 }
-
-
-const authenticate = () => (dispatch => {
-  if (client.isLoggedIn()) {
-    dispatch(actions.setIsLoggedIn(true));
-    dispatch(flashMessageActions.setFlashMessage('Logged in successfully'));
-  } else {
-    dispatch(actions.handleUnauthenticUser);
-    dispatch(flashMessageActions.setFlashMessage('Login first'));
-    /*dispatch(actions.setIsLoggedIn(false));
-    dispatch(actions.setLoginProgress(false));
-    dispatch(actions.setShouldRedirect(false));*/
-    console.log('calling authenticate');
-  }
-});
 
 const login = (email, password) => ((dispatch) => {
   dispatch(actions.loginRequest());
@@ -112,6 +66,26 @@ const login = (email, password) => ((dispatch) => {
       }
     );
 });
+
+const authenticate = () => ((dispatch) => {
+  console.log('authenticate called');
+  if(!client.isLoggedIn()) {
+    let message = null;
+
+    if (client.isTokenExpired()) {
+      message = 'Your Token expired. Please login again';
+    }
+
+    if (!client.token) {
+      message = 'Please login first';
+    }
+
+    client.removeToken();
+    actions.setShouldRedirect(false);
+    flashMessageActions.setFlashMessage(message);
+  }
+});
+
 
 export const actions = {
   login,
@@ -131,22 +105,6 @@ export const actions = {
     type: types.SET_SHOULD_REDIRECT,
     bool
   }),
-  authenticate,
-  setIsLoggedIn: (bool) => ({
-    type: types.SET_IS_LOGGED_IN,
-    bool
-  }),
-  setLoginProgress: (bool) => (
-    {
-      type: types.SET_LOGIN_PROGRESS,
-      bool
-    }
-  ),
-  handleUnauthenticUser: () => ({
-    type: types.HANDLE_UNAUTHENTIC_USER
-  }),
-  handleAuthenticUser: () => ({
-    type: types.HANDLE_AUTHENTIC_USER
-  }),
+  authenticate
 }
 

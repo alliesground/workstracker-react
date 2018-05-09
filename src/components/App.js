@@ -12,7 +12,7 @@ import TopBar from './TopBar';
 import Login from '../containers/Login';
 import Logout from '../containers/Logout';
 import PrivateRoute from '../hocs/PrivateRoute';
-import PrivateRouteContainer from '../containers/PrivateRouteContainer';
+import PrivateRouteWithFlashMessage from '../containers/PrivateRouteWithFlashMessage';
 import Profile from './Profile';
 import RouteWithProps from '../hocs/RouteWithProps';
 import { connect } from 'react-redux';
@@ -47,7 +47,7 @@ class App extends Component {
               }}
             />
 
-            <PrivateRouteContainer
+            <PrivateRouteWithFlashMessage
               path='/projects'
               component={Projects}
             />
