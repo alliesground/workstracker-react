@@ -8,6 +8,16 @@ import { actions as flashMessageActions } from '../ducks/flash_message';
 class PrivateRouteWithFlashMessage extends Component {
 
   componentDidMount = () => {
+    const message = this.message();
+
+    if (!client.isLoggedIn()) {
+      client.removeToken();
+      this.props.setShouldRedirect(false);
+      this.props.setFlashMessage(message);
+    }
+  }
+
+  message = () => {
     let message = null;
 
     if (client.isTokenExpired()) {
@@ -17,12 +27,7 @@ class PrivateRouteWithFlashMessage extends Component {
     if (!client.token) {
       message = 'Please login first';
     }
-
-    if (!client.isLoggedIn()) {
-      client.removeToken();
-      this.props.setShouldRedirect(false);
-      this.props.setFlashMessage(message);
-    }
+    return message;
   }
 
   render() {
