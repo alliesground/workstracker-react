@@ -15,19 +15,42 @@ class Client {
   }
 
   isTokenExpired = () => {
-    const currentTime = new Date().getTime() / 1000;
-    return (currentTime > this.jwtExpTime);
+    //const currentTime = new Date().getTime() / 1000;
+    return (this.currentTime() > this.jwtExpTime);
   }
 
   isLoggedIn() {
-    return (!this.isTokenExpired() && !!this.token);
+    //return (!this.isTokenExpired() && !!this.token);
+    return !!this.token;
+  }
+
+  getToken() {
+    console.log('Getting Token');
+    if (this.token && (!this.isTokenExpired() || this.tokenTimeToExpireInMinutes() > 1)) {
+      return this.token;
+    }
+    return this.refreshToken();
+  }
+
+  currentTime () {
+    return new Date().getTime() / 1000;
+  }
+
+  tokenTimeToExpireInMinutes() {
+    const diffInSeconds = this.jwtExpTime - this.currentTime();
+    return Math.floor(diffInSeconds/60);
+  }
+
+  refreshToken() {
+    //return fetch(`/api`)
+    console.log('Token: ', this.tokenTimeToExpireInMinutes());
   }
 
   getProjects() {
     return fetch(`/api/projects`, {
       headers: {
         'Accept': 'application/json',
-        'Authorization': this.token
+        'Authorization': this.getToken()
       }
     }).then(this.checkStatus)
       .then(this.parseJson);
