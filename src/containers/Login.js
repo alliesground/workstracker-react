@@ -36,7 +36,8 @@ class Login extends Component {
   render() {
     if (this.props.shouldRedirect) {
       return (
-        <Redirect to='/projects' />
+        //<Redirect to='/projects' />
+        <Redirect to='/profile' />
       );
     } else {
       return (

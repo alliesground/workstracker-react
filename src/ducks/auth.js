@@ -56,13 +56,16 @@ const login = (email, password) => ((dispatch) => {
 
   client.login(email, password).then(
       (response) => {
+        console.log('Login success fired')
         dispatch(actions.loginSuccess());
       },
       (error) => {
         dispatch(actions.loginFailure());
-        dispatch(
-          flashMessageActions.setFlashMessage(error.error)
-        )
+        error.errors.forEach(e => {
+          dispatch(
+            flashMessageActions.setFlashMessage(e)
+          )
+        })
       }
     );
 });

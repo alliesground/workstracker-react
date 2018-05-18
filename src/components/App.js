@@ -45,7 +45,7 @@ class App extends Component {
               }}
             />
 
-            <PrivateRouteWithFlashMessage
+            <PrivateRoute
               path='/projects'
               component={Projects}
             />

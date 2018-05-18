@@ -1,16 +1,25 @@
 import URLSeachParams from 'url-search-params';
 import jwt_decode from 'jwt-decode';
 
-const LOCAL_TOKEN_STORAGE_KEY = 'sameer';
-const LOCAL_JWT_EXP_STORAGE_KEY = 'token-exp-time';
+const LOCAL_AUTH_TOKEN_STORAGE_KEY = 'sameer';
+
+const LOCAL_ACCESS_TOKEN_STORAGE_KEY = 'access-token';
+const LOCAL_CLIENT_ID_STORAGE_KEY = 'client-id';
+const LOCAL_UID_STORAGE_KEY = 'uid';
+const LOCAL_TOKEN_EXP_STORAGE_KEY = 'token-exp-time';
+
 
 class Client {
   constructor() {
     this.useLocalStorage = (typeof localStorage !== 'undefined');
 
     if (this.useLocalStorage) {
-      this.token = localStorage.getItem(LOCAL_TOKEN_STORAGE_KEY);
-      this.jwtExpTime = localStorage.getItem(LOCAL_JWT_EXP_STORAGE_KEY);
+      this.accessToken = localStorage.getItem(LOCAL_ACCESS_TOKEN_STORAGE_KEY);
+      this.clientId = localStorage.getItem(LOCAL_CLIENT_ID_STORAGE_KEY);
+      this.uId = localStorage.getItem(LOCAL_UID_STORAGE_KEY);
+      this.tokenExpiry = localStorage.getItem(LOCAL_TOKEN_EXP_STORAGE_KEY);
+      //this.token = localStorage.getItem(LOCAL_TOKEN_STORAGE_KEY);
+      //this.tokenExpTime = localStorage.getItem(LOCAL_TOKEN_EXP_STORAGE_KEY);
     }
   }
 
@@ -21,7 +30,8 @@ class Client {
 
   isLoggedIn() {
     //return (!this.isTokenExpired() && !!this.token);
-    return !!this.token;
+    console.log('Is logged in: ', this.accessToken);
+    return !!this.accessToken;
   }
 
   getToken() {
@@ -50,7 +60,7 @@ class Client {
     return fetch(`/api/projects`, {
       headers: {
         'Accept': 'application/json',
-        'Authorization': this.getToken()
+        'Authorization': this.authToken
       }
     }).then(this.checkStatus)
       .then(this.parseJson);
@@ -69,51 +79,72 @@ class Client {
       .then(this.parseJson);
   }
 
-  handleLoginError(error) {
+  /*handleLoginError(error) {
     this.removeToken();
     return Promise.reject(error);
-  }
+  }*/
 
   login(email, password) {
-    const data = new URLSearchParams();
+    const data = {email, password}
+    /*const data = new URLSearchParams();
     data.set('user[email]', email);
-    data.set('user[password]', password);
+    data.set('user[password]', password);*/
 
-    return fetch(`/users/sign_in`, {
+    return fetch(`/auth/sign_in`, {
       method: 'post',
       headers: {
-        accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+        //'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
-      body: data
-    }).then(this.checkStatus)
-      .then(
-        (response) => {
-          this.setToken(this.getTokenFromHeader(response));
-          this.setJwtExpTime();
-        }
-      )
-      .catch(error => this.handleLoginError(error));
+      body: JSON.stringify(data)
+    }).then(this.checkStatus);
   }
 
   getTokenFromHeader = (response) => (
-    response.headers.get('authorization').split(' ')[1]
+    response.headers.get('access-token')
   )
 
   logout() {
-    return fetch(`/users/sign_out`, {
+    return fetch(`/auth/sign_out`, {
       method: 'delete',
       headers: {
-        accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': this.token
+        'access-token': this.accessToken,
+        'uid': this.uId,
+        'client': this.clientId,
+        'Accept': 'application/json',
       }
     }).then(this.checkStatus)
-      .then(this.removeToken());
+      .then(this.removeAuthHeaders());
   }
+
+  setAuthHeaders = (response) => {
+    this.accessToken = response.headers.get('access-token');
+    this.clientId = response.headers.get('client');
+    this.uId = response.headers.get('uid');
+    this.tokenExpiry = response.headers.get('expirty');
+
+    if (this.useLocalStorage) {
+      localStorage.setItem(LOCAL_ACCESS_TOKEN_STORAGE_KEY, this.accessToken);
+      localStorage.setItem(LOCAL_CLIENT_ID_STORAGE_KEY, this.clientId);
+      localStorage.setItem(LOCAL_TOKEN_EXP_STORAGE_KEY, this.tokenExpiry);
+      localStorage.setItem(LOCAL_UID_STORAGE_KEY, this.uId);
+    }
+  }
+
+  /*authHeaders = () => ({
+    'access-token': this.authToken.accessToken,
+    'client': this.authToken.client,
+    'uid': this.authToken.uid,
+    'expiry': this.authToken.expiry
+  })*/
 
   checkStatus = (response) => {
     if (response.status >= 200 && response.status < 300) { 
+      if (response.headers.get('access-token')) {
+        this.setAuthHeaders(response);
+      }
+
       return response;
 
     } else if (response.status == 422) {
@@ -169,28 +200,40 @@ class Client {
     return response.json();
   }
 
-  setToken(token) {
-    this.token = 'Bearer ' + token;
+  /*setToken(token) {
+    this.token = token
     console.log(this.token);
 
     if (this.useLocalStorage) {
-      localStorage.setItem(LOCAL_TOKEN_STORAGE_KEY, this.token);
+      localStorage.setItem(LOCAL_TOKEN_STORAGE_KEY, token);
     }
-  }
+  }*/
 
-  setJwtExpTime = () => {
-    this.jwtExpTime = jwt_decode(this.token).exp;
-
+  setTokenExpTime = (expTime) => {
     if (this.useLocalStorage) {
-      localStorage.setItem(LOCAL_JWT_EXP_STORAGE_KEY, this.jwtExpTime)
+      localStorage.setItem(LOCAL_TOKEN_EXP_STORAGE_KEY, expTime);
     }
   }
 
   removeToken() {
-    this.token = null;
+    //this.token = null;
 
     if (this.useLocalStorage) {
-      localStorage.removeItem(LOCAL_TOKEN_STORAGE_KEY);
+      localStorage.removeItem(LOCAL_AUTH_TOKEN_STORAGE_KEY);
+    }
+  }
+
+  removeAuthHeaders = () => {
+    this.accessToken = null;
+    this.clientId = null;
+    this.uId = null;
+    this.tokenExpiry = null;
+
+    if (this.useLocalStorage) {
+      localStorage.removeItem(LOCAL_ACCESS_TOKEN_STORAGE_KEY);
+      localStorage.removeItem(LOCAL_CLIENT_ID_STORAGE_KEY);
+      localStorage.removeItem(LOCAL_UID_STORAGE_KEY);
+      localStorage.removeItem(LOCAL_TOKEN_EXP_STORAGE_KEY);
     }
   }
 }

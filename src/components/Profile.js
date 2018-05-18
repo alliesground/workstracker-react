@@ -7,6 +7,10 @@ import {
 } from '../ducks/flash_message';
 
 export default class Profile extends Component {
+  componentDidMount = () => {
+    console.log(this.props);
+  }
+
   render() {
     return (
       <div>
