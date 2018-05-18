@@ -18,8 +18,6 @@ class Client {
       this.clientId = localStorage.getItem(LOCAL_CLIENT_ID_STORAGE_KEY);
       this.uId = localStorage.getItem(LOCAL_UID_STORAGE_KEY);
       this.tokenExpiry = localStorage.getItem(LOCAL_TOKEN_EXP_STORAGE_KEY);
-      //this.token = localStorage.getItem(LOCAL_TOKEN_STORAGE_KEY);
-      //this.tokenExpTime = localStorage.getItem(LOCAL_TOKEN_EXP_STORAGE_KEY);
     }
   }
 
@@ -31,6 +29,7 @@ class Client {
   isLoggedIn() {
     //return (!this.isTokenExpired() && !!this.token);
     console.log('Is logged in: ', this.accessToken);
+    console.log('Expiry: ', this.tokenExpiry);
     return !!this.accessToken;
   }
 
@@ -59,8 +58,10 @@ class Client {
   getProjects() {
     return fetch(`/api/projects`, {
       headers: {
+        'access-token': this.accessToken,
+        'client': this.clientId,
+        'uid': this.uId,
         'Accept': 'application/json',
-        'Authorization': this.authToken
       }
     }).then(this.checkStatus)
       .then(this.parseJson);
@@ -122,7 +123,7 @@ class Client {
     this.accessToken = response.headers.get('access-token');
     this.clientId = response.headers.get('client');
     this.uId = response.headers.get('uid');
-    this.tokenExpiry = response.headers.get('expirty');
+    this.tokenExpiry = response.headers.get('expiry');
 
     if (this.useLocalStorage) {
       localStorage.setItem(LOCAL_ACCESS_TOKEN_STORAGE_KEY, this.accessToken);
