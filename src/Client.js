@@ -23,11 +23,11 @@ class Client {
 
   isTokenExpired = () => {
     //const currentTime = new Date().getTime() / 1000;
-    return (this.currentTime() > this.jwtExpTime);
+    return (this.currentTime() > this.tokenExpiry);
   }
 
   isLoggedIn() {
-    //return (!this.isTokenExpired() && !!this.token);
+    //return (!!this.accessToken && !this.isTokenExpired());
     console.log('Is logged in: ', this.accessToken);
     console.log('Expiry: ', this.tokenExpiry);
     return !!this.accessToken;

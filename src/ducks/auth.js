@@ -9,11 +9,13 @@ export const types = {
   LOGIN_FAILURE: 'LOGIN_FAILURE',
   LOGOUT: 'LOGOUT',
   SET_SHOULD_REDIRECT: 'SET_SHOULD_REDIRECT',
+  SET_IS_LOGGED_IN: 'SET_IS_LOGGED_IN'
 }
 
 const initialState = {
   shouldRedirect: false,
   loginProgress: false,
+  isLoggedIn: false
 }
 
 export default (state = initialState, action) => {
@@ -28,6 +30,7 @@ export default (state = initialState, action) => {
         ...state,
         loginProgress: false,
         shouldRedirect: true,
+        isLoggedIn: true
       }
     case types.LOGIN_FAILURE:
       return {
@@ -39,11 +42,17 @@ export default (state = initialState, action) => {
         ...state,
         shouldRedirect: false,
         loginProgress: false,
+        isLoggedIn: false
       }
     case types.SET_SHOULD_REDIRECT:
       return {
         ...state,
         shouldRedirect: action.bool,
+      }
+    case types.SET_IS_LOGGED_IN:
+      return {
+        ...state,
+        isLoggedIn: action.bool
       }
     default: {
       return state
@@ -88,5 +97,9 @@ export const actions = {
     type: types.SET_SHOULD_REDIRECT,
     bool
   }),
+  setIsLoggedIn: (bool) => ({
+    type: types.SET_IS_LOGGED_IN,
+    bool
+  })
 }
 
