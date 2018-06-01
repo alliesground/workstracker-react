@@ -26,20 +26,13 @@ class Client {
   }
 
   isLoggedIn() {
-    console.log('Is logged in: ', this.accessToken);
-    console.log('Expiry: ', this.tokenExpiry);
     return !!this.accessToken;
   }
 
   isTokenValid() {
-    console.log('Getting Token');
     if (this.accessToken && (!this.isTokenExpired() && this.tokenTimeToExpireInMinutes() > 1)) {
-      console.log('isTokenExpired', this.isTokenExpired())
-      console.log('Time to expire', this.tokenTimeToExpireInMinutes())
       return true
     }
-    console.log('isTokenExpired', this.isTokenExpired())
-    console.log('Time to expire', this.tokenTimeToExpireInMinutes())
     return false;
   }
 
@@ -109,7 +102,7 @@ class Client {
         'Accept': 'application/json',
       }
     }).then(this.checkStatus)
-      .then(this.removeAuthHeaders());
+      .then(this.removeAuthHeaders);
   }
 
   setAuthHeaders = (response) => {
@@ -117,7 +110,6 @@ class Client {
     this.clientId = response.headers.get('client');
     this.uId = response.headers.get('uid');
     this.tokenExpiry = response.headers.get('expiry');
-    console.log(this.tokenExpiry);
 
     if (this.useLocalStorage) {
       localStorage.setItem(LOCAL_ACCESS_TOKEN_STORAGE_KEY, this.accessToken);
@@ -194,15 +186,6 @@ class Client {
   parseJson(response) {
     return response.json();
   }
-
-  /*setToken(token) {
-    this.token = token
-    console.log(this.token);
-
-    if (this.useLocalStorage) {
-      localStorage.setItem(LOCAL_TOKEN_STORAGE_KEY, token);
-    }
-  }*/
 
   setTokenExpTime = (expTime) => {
     if (this.useLocalStorage) {

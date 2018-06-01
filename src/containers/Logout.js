@@ -7,20 +7,24 @@ import { connect } from 'react-redux';
 class Logout extends Component {
   constructor(props) {
     super(props);
-    //client.logout();
     this.props.logout();
   }
 
   render() {
-    return (
-      <Redirect
-        to='/login'
-      />
-    );
+    if (!this.props.shouldRedirect) {
+      console.log('render logout');
+      return (
+        <Redirect
+          to='/login'
+        />
+      );
+    } else { return null }
   }
 }
 
-const mapStateToProps = () => ({})
+const mapStateToProps = (state) => ({
+  shouldRedirect: state.auth.shouldRedirect
+})
 const mapDispatchToProps = (dispatch) => {
   return {
     logout: () => (

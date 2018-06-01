@@ -6,10 +6,10 @@ import {
 import { client } from '../Client';
 import withMergedProps from './WithMergedProps';
 
-const PrivateRoute = ({ component, ...rest }) => {
+const PrivateRoute = ({ component, isLoggedIn, ...rest }) => {
   return (
     <Route {...rest} render={props => {
-      return client.isLoggedIn() ? ( 
+      return isLoggedIn ? ( 
         withMergedProps(component, props, rest)
       ) : (
         <Redirect to={{pathname: '/login'}} />

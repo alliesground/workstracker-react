@@ -17,11 +17,7 @@ import {
   actions as flashMessageActions
 } from '../ducks/flash_message';
 
-class Projects extends Component {
-
-  componentWillUnmount() {
-    this.props.resetFlashMessage();
-  }
+class Projects extends Component { 
 
   componentDidMount() {
     this.props.fetchProjects();

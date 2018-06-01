@@ -16,7 +16,7 @@ class Login extends Component {
   }
 
   componentWillUnmount() {
-    this.props.resetFlashMessage();
+    //this.props.resetFlashMessage();
   }
 
   handleFormSubmit = (e) => {
@@ -35,6 +35,7 @@ class Login extends Component {
 
   render() {
     if (this.props.shouldRedirect) {
+      console.log('Render shouldRedirect: ', this.props.shouldRedirect);
       return (
         <Redirect to='/profile' />
       );

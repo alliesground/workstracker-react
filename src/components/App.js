@@ -11,13 +11,12 @@ import Projects from '../containers/Projects';
 import TopBar from './TopBar';
 import Login from '../containers/Login';
 import Logout from '../containers/Logout';
-import PrivateRoute from '../hocs/PrivateRoute';
 import Profile from './Profile';
 import RouteWithProps from '../hocs/RouteWithProps';
 import { connect } from 'react-redux';
 import { selectors as flashMessageSelectors } from '../ducks/flash_message';
 import Message from './Message';
-import PrivateRouteContainer from '../containers/PrivateRouteContainer';
+import PrivateRoute from '../containers/PrivateRoute';
 
 class App extends Component {
   render() {
@@ -45,7 +44,7 @@ class App extends Component {
               }}
             />
 
-            <PrivateRouteContainer
+            <PrivateRoute
               path='/projects'
               component={Projects}
             />
