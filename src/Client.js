@@ -22,23 +22,25 @@ class Client {
   }
 
   isTokenExpired = () => {
-    //const currentTime = new Date().getTime() / 1000;
     return (this.currentTime() > this.tokenExpiry);
   }
 
   isLoggedIn() {
-    //return (!!this.accessToken && !this.isTokenExpired());
     console.log('Is logged in: ', this.accessToken);
     console.log('Expiry: ', this.tokenExpiry);
     return !!this.accessToken;
   }
 
-  getToken() {
+  isTokenValid() {
     console.log('Getting Token');
-    if (this.token && (!this.isTokenExpired() || this.tokenTimeToExpireInMinutes() > 1)) {
-      return this.token;
+    if (this.accessToken && (!this.isTokenExpired() && this.tokenTimeToExpireInMinutes() > 1)) {
+      console.log('isTokenExpired', this.isTokenExpired())
+      console.log('Time to expire', this.tokenTimeToExpireInMinutes())
+      return true
     }
-    return this.refreshToken();
+    console.log('isTokenExpired', this.isTokenExpired())
+    console.log('Time to expire', this.tokenTimeToExpireInMinutes())
+    return false;
   }
 
   currentTime () {
@@ -46,21 +48,14 @@ class Client {
   }
 
   tokenTimeToExpireInMinutes() {
-    const diffInSeconds = this.jwtExpTime - this.currentTime();
-    return Math.floor(diffInSeconds/60);
-  }
-
-  refreshToken() {
-    //return fetch(`/api`)
-    console.log('Token: ', this.tokenTimeToExpireInMinutes());
+    const diffInSeconds = this.tokenExpiry - this.currentTime();
+    return diffInSeconds/60;
   }
 
   getProjects() {
     return fetch(`/api/projects`, {
       headers: {
-        'access-token': this.accessToken,
-        'client': this.clientId,
-        'uid': this.uId,
+        ...this.getAuthHeaders(),
         'Accept': 'application/json',
       }
     }).then(this.checkStatus)
@@ -72,9 +67,9 @@ class Client {
       body: JSON.stringify(project),
       method: 'post',
       headers: {
+        ...this.getAuthHeaders(),
         'Accept': 'application/json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': this.token
       }
     }).then(this.checkStatus)
       .then(this.parseJson);
@@ -110,9 +105,7 @@ class Client {
     return fetch(`/auth/sign_out`, {
       method: 'delete',
       headers: {
-        'access-token': this.accessToken,
-        'uid': this.uId,
-        'client': this.clientId,
+        ...this.getAuthHeaders(),
         'Accept': 'application/json',
       }
     }).then(this.checkStatus)
@@ -124,6 +117,7 @@ class Client {
     this.clientId = response.headers.get('client');
     this.uId = response.headers.get('uid');
     this.tokenExpiry = response.headers.get('expiry');
+    console.log(this.tokenExpiry);
 
     if (this.useLocalStorage) {
       localStorage.setItem(LOCAL_ACCESS_TOKEN_STORAGE_KEY, this.accessToken);
@@ -133,12 +127,12 @@ class Client {
     }
   }
 
-  /*authHeaders = () => ({
-    'access-token': this.authToken.accessToken,
-    'client': this.authToken.client,
-    'uid': this.authToken.uid,
-    'expiry': this.authToken.expiry
-  })*/
+  getAuthHeaders = () => ({
+    'access-token': this.accessToken,
+    'client': this.clientId,
+    'uid': this.uId,
+    'expiry': this.tokenExpiry
+  })
 
   checkStatus = (response) => {
     if (response.status >= 200 && response.status < 300) { 

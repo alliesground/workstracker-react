@@ -60,6 +60,22 @@ export default (state = initialState, action) => {
   }
 }
 
+const logout = () => ((dispatch) => {
+  if (client.isTokenExpired) {
+    console.log('no server request');
+    dispatch({ type: types.LOGOUT });
+  } else {
+    client.logout().then(
+      (response) => {
+        dispatch({type: types.LOGOUT});
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+});
+
 const login = (email, password) => ((dispatch) => {
   dispatch(actions.loginRequest());
 
@@ -90,9 +106,7 @@ export const actions = {
   loginFailure: () => ({
     type: types.LOGIN_FAILURE
   }),
-  logout: () => ({
-    type: types.LOGOUT
-  }),
+  logout,
   setShouldRedirect: (bool) => ({
     type: types.SET_SHOULD_REDIRECT,
     bool

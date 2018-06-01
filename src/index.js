@@ -13,13 +13,14 @@ import rootReducer from './ducks/index';
 import thunk from 'redux-thunk';
 import { loadState, saveState } from './utils/localStorage';
 import {batchActions, enableBatching, batchDispatchMiddleware} from 'redux-batched-actions';
+import { checkToken } from './middlewares'
 
 const persistedState = loadState();
 const store = createStore(
   rootReducer,
   persistedState,
   compose(
-    applyMiddleware(thunk),
+    applyMiddleware(thunk, checkToken),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   )
 );

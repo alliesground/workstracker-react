@@ -45,11 +45,6 @@ class App extends Component {
               }}
             />
 
-            <PrivateRouteContainer 
-              path='/profile'
-              component={Profile}
-            />
-
             <PrivateRouteContainer
               path='/projects'
               component={Projects}

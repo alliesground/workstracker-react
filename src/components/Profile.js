@@ -10,7 +10,7 @@ import { client } from '../Client';
 
 class Profile extends Component {
   handleLogout = () => {
-    client.logout();
+    //client.logout();
     this.props.logout();
   }
 
@@ -41,6 +41,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(Profile);

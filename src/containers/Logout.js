@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 class Logout extends Component {
   constructor(props) {
     super(props);
-    client.logout();
+    //client.logout();
     this.props.logout();
   }
 
