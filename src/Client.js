@@ -79,7 +79,7 @@ class Client {
     data.set('user[email]', email);
     data.set('user[password]', password);*/
 
-    return fetch(`/auth/sign_in`, {
+    return fetch(`/api/auth/sign_in`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -95,7 +95,7 @@ class Client {
   )
 
   logout() {
-    return fetch(`/auth/sign_out`, {
+    return fetch(`/api/auth/sign_out`, {
       method: 'delete',
       headers: {
         ...this.getAuthHeaders(),
