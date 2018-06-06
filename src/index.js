@@ -8,32 +8,41 @@ import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 import 'semantic-ui-css/semantic.min.css';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import rootReducer from './ducks/index';
 import thunk from 'redux-thunk';
 import { loadState, saveState } from './utils/localStorage';
 import {batchActions, enableBatching, batchDispatchMiddleware} from 'redux-batched-actions';
-import { checkToken } from './middlewares'
+import { checkToken, resetFlashMessage } from './middlewares';
+import Spinner from './components/spinner';
 
-const persistedState = loadState();
+const persistConfig = {
+  key: 'root',
+  storage
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
 const store = createStore(
-  rootReducer,
-  persistedState,
+  persistedReducer,
   compose(
-    applyMiddleware(thunk, checkToken),
+    applyMiddleware(thunk, checkToken, resetFlashMessage),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   )
 );
 
-store.subscribe(() => {
-  saveState(store.getState());
-});
+const persistor = persistStore(store)
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
+    <PersistGate loading={<Spinner />} persistor={persistor}>
+      <Router>
+        <App />
+      </Router>
+    </PersistGate>
   </Provider>,
   document.getElementById('root')
 );

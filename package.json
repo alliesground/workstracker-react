@@ -9,6 +9,7 @@
     "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",
     "redux-batched-actions": "^0.3.0",
+    "redux-persist": "^5.9.1",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.14",
     "semantic-ui-react": "^0.78.1"
