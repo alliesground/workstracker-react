@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { selectors as flashMessageSelectors } from '../ducks/flash_message';
 import Message from './Message';
 import PrivateRoute from '../containers/PrivateRoute';
+import Project from '../components/Project';
 
 class App extends Component {
   render() {
@@ -45,12 +46,17 @@ class App extends Component {
             />
 
             <PrivateRoute
+              exact
               path='/projects'
               component={Projects}
             />
             <Route path='/login' component={Login} />
             <Route path='/logout' component={Logout} />
             <Route path='/profile' component={Profile} />
+            <Route
+              path={'/projects/:projectId'}
+              component={Project}
+            />
           </Switch>
         </div>
       </div>

@@ -42,23 +42,6 @@ class Projects extends Component {
 
             <ToggleableProjectForm />
           </div>
-
-          <div className='ui ten wide column'>
-            <Route
-              path={`${matchPath}/:projectId`}
-              render={({ match }) => {
-                const project = this.props.projects.find(
-                  (p) => p.id == match.params.projectId
-                );
-
-                return (
-                  <Project
-                    project={project}
-                  />
-                );
-              }}
-            />
-          </div>
         </div>
       );
     }
