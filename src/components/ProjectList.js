@@ -1,20 +1,19 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
+import { Card } from 'semantic-ui-react'
 
-const ProjectListMenu = ({ projects, projectsPath }) => (
-  <div className='ui secondary vertical menu'>
-    <div className='header item'>
-      Projects
-    </div>
+const ProjectList = ({ projects, projectsPath }) => (
+  <div>
     {
       projects.map((project) => (
           <NavLink
             to={`${projectsPath}/${project.id}`}
-            className='item'
             key={project.id}
           >
-            {project.attributes.title}
+            <Card 
+              header={project.attributes.title}
+            />
           </NavLink>
         )
       )
@@ -22,4 +21,4 @@ const ProjectListMenu = ({ projects, projectsPath }) => (
   </div>
 );
 
-export default ProjectListMenu;
+export default ProjectList;

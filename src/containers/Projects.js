@@ -6,7 +6,7 @@ import {
   Route
 } from 'react-router-dom';
 import Project from '../components/Project';
-import ProjectListMenu from '../components/ProjectListMenu';
+import ProjectList from '../components/ProjectList';
 import { connect } from 'react-redux';
 import { actions, selectors } from '../ducks/projects/index';
 import ToggleableProjectForm from '../containers/ToggleableProjectForm';
@@ -33,15 +33,13 @@ class Projects extends Component {
       const matchPath = this.props.match.path;
 
       return (
-        <div className='ui two column divided grid'>
-          <div className='ui six wide column'>
-            <ProjectListMenu
-              projects={this.props.projects}
-              projectsPath={matchPath}
-            />
+        <div className='ui six wide column'>
+          <ProjectList
+            projects={this.props.projects}
+            projectsPath={matchPath}
+          />
 
-            <ToggleableProjectForm />
-          </div>
+          <ToggleableProjectForm />
         </div>
       );
     }
