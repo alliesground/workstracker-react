@@ -13,6 +13,11 @@ export default (state = {}, action) => {
         ...state,
         [action.response.id]: action.response
       }
+    case types.FETCH_PROJECT_SUCCESS:
+      return {
+        ...state,
+        [action.response.id]: action.response
+      }
     default:
       return state;
   }

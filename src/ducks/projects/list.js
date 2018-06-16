@@ -7,6 +7,8 @@ const ids = (state = [], action) => {
       return action.response.map(project => project.id);
     case types.CREATE_PROJECT_SUCCESS:
       return [ ...state, action.response.id ];
+    case types.FETCH_PROJECT_SUCCESS:
+      return [ ...state, action.response.id ];
     default:
       return state;
   }
@@ -18,6 +20,8 @@ const isFetching = (state = false, action) => {
       return true;
     case types.FETCH_PROJECTS_SUCCESS:
     case types.FETCH_PROJECTS_FAILURE:
+    case types.FETCH_PROJECT_SUCCESS:
+    case types.FETCH_PROJECT_FAILURE: 
       return false;
     default:
       return state;

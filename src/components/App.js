@@ -53,7 +53,7 @@ class App extends Component {
             <Route path='/login' component={Login} />
             <Route path='/logout' component={Logout} />
             <Route path='/profile' component={Profile} />
-            <Route
+            <PrivateRoute
               path={'/projects/:projectId'}
               component={Project}
             />

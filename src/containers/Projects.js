@@ -12,10 +12,6 @@ import { actions, selectors } from '../ducks/projects/index';
 import ToggleableProjectForm from '../containers/ToggleableProjectForm';
 import { SubmissionError } from 'redux-form';
 import Message from '../components/Message';
-import {
-  selectors as flashMessageSelectors,
-  actions as flashMessageActions
-} from '../ducks/flash_message';
 
 class Projects extends Component { 
 
@@ -50,7 +46,6 @@ const mapStateToProps = (state) => {
   return {
     projects: selectors.getProjects(state.projects),
     isFetching: selectors.getIsFetching(state.projects),
-    flashMessage: flashMessageSelectors.getFlashMessage(state)
   }
 }
 
@@ -58,9 +53,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchProjects: () => (
       dispatch(actions.fetchProjects())
-    ),
-    resetFlashMessage: () => (
-      dispatch(flashMessageActions.resetFlashMessage())
     )
   }
 }

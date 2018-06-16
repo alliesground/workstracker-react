@@ -55,6 +55,16 @@ class Client {
       .then(this.parseJson);
   }
 
+  getProject(id) {
+    return fetch(`/api/projects/${id}`, {
+      headers: {
+        ...this.getAuthHeaders(),
+        'Accept': 'application/json',
+      }
+    }).then(this.checkStatus)
+      .then(this.parseJson);
+  }
+
   createProject(project) {
     return fetch(`/api/projects`, {
       body: JSON.stringify(project),
@@ -127,11 +137,11 @@ class Client {
   })
 
   checkStatus = (response) => {
-    if (response.status >= 200 && response.status < 300) { 
-      if (response.headers.get('access-token')) {
-        this.setAuthHeaders(response);
-      }
+    if (response.headers.get('access-token')) {
+      this.setAuthHeaders(response);
+    } 
 
+    if (response.status >= 200 && response.status < 300) {
       return response;
 
     } else if (response.status == 422) {

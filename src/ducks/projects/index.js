@@ -6,9 +6,40 @@ import { types } from './types';
 import { actions as flashMessageActions } from '../flash_message';
 import { SubmissionError } from 'redux-form';
 
+
+const shouldRedirect = (state = false, action) => {
+  switch (action.type) {
+    case types.FETCH_PROJECT_FAILURE:
+      return true;
+    case types.SET_SHOULD_REDIRECT:
+      return action.bool;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   byId,
-  list
+  list,
+  shouldRedirect
+});
+
+
+const fetchProject = (id) => ((dispatch) => {
+  dispatch(actions.fetchProjectsRequest());
+
+  client.getProject(id).then(
+    (response) => {
+      dispatch(actions.fetchProjectSuccess(response.data));
+    },
+    (error) => { 
+      dispatch(actions.fetchProjectFailure());
+      dispatch(
+        flashMessageActions.setFlashMessage(error.errors[0].detail)
+      );
+      console.log(error);
+    }
+  )
 });
 
 const fetchProjects = () => ((dispatch) => {
@@ -19,7 +50,7 @@ const fetchProjects = () => ((dispatch) => {
       dispatch(actions.fetchProjectsSuccess(response.data));
     },
     (error) => {
-      //dispatch(actions.fetchProjectsFailure());
+      dispatch(actions.fetchProjectsFailure());
       dispatch(
         flashMessageActions.setFlashMessage(error.error)
       )
@@ -52,6 +83,14 @@ export const actions = {
   fetchProjectsFailure: () => ({
     type: types.FETCH_PROJECTS_FAILURE
   }),
+  fetchProject,
+  fetchProjectSuccess: (response) => ({
+    type: types.FETCH_PROJECT_SUCCESS,
+    response
+  }),
+  fetchProjectFailure: () => ({
+    type: types.FETCH_PROJECT_FAILURE,
+  }),
   createProject,
   createProjectRequest: () => ({
     type: types.CREATE_PROJECT_REQUEST
@@ -59,7 +98,11 @@ export const actions = {
   createProjectSuccess: (response) => ({
     type: types.CREATE_PROJECT_SUCCESS,
     response
-  })
+  }),
+  setShouldRedirect: (bool) => ({
+    type: types.SET_SHOULD_REDIRECT,
+    bool
+  }),
 }
 
 export const selectors = {
