@@ -1,22 +1,14 @@
 import React, { Component } from 'react'
+import { Button, Modal } from 'semantic-ui-react';
 import ProjectForm from './ProjectForm'
 import { SubmissionError } from 'redux-form';
 import { connect } from 'react-redux';
 import { actions } from '../ducks/projects/index';
 
-class ToggleableProjectForm extends Component {
-  state = {
-    isOpen: false
-  }
-
-  handleFormOpen = () => {
-    this.setState({ isOpen: true });
-  }
-
-  handleFormClose = (e) => {
-    e.preventDefault();
-    this.setState({ isOpen: false });
-  }
+class ToggleableProjectForm extends Component { 
+  state = { modalOpen: false }
+  handleFormOpen = () => this.setState({ modalOpen: true });
+  handleFormClose = () => this.setState({ modalOpen: false });
 
   handleSubmit = (project) => {
     const project_payload = Object.assign({}, {
@@ -31,7 +23,7 @@ class ToggleableProjectForm extends Component {
 
     return this.props.createProject(project_payload)
       .then(() => {
-        this.setState({ isOpen: false })
+        this.handleFormClose();
       })
       .catch(error => {
         console.log('Error', error);
@@ -43,25 +35,21 @@ class ToggleableProjectForm extends Component {
   }
 
   render() {
-    if (this.state.isOpen) {
-      return (
-        <ProjectForm
-          onSubmit={this.handleSubmit}
-          onFormClose={this.handleFormClose}
-        />
-      );
-    } else {
-      return (
-        <div className='row'>
-          <button
-            className='ui basic button icon'
-            onClick={this.handleFormOpen}
-          >
-            <i className='plus icon' />
-          </button>
-        </div>
-      );
-    }
+    return (
+      <Modal 
+        trigger={<Button onClick={this.handleFormOpen}>Create New Project</Button>} 
+        open={this.state.modalOpen}
+        onClose={this.handleFormClose}
+        size='mini'
+      >
+        <Modal.Content>
+          <ProjectForm
+            onSubmit={this.handleSubmit}
+            onFormClose={this.handleFormClose}
+          />
+        </Modal.Content>
+      </Modal>
+    );
   }
 }
 
