@@ -8,6 +8,8 @@ const LOCAL_CLIENT_ID_STORAGE_KEY = 'client-id';
 const LOCAL_UID_STORAGE_KEY = 'uid';
 const LOCAL_TOKEN_EXP_STORAGE_KEY = 'token-exp-time';
 
+const API_HOST = process.env.REACT_APP_API_HOST || '';
+
 
 class Client {
   constructor() {
@@ -89,7 +91,7 @@ class Client {
     data.set('user[email]', email);
     data.set('user[password]', password);*/
 
-    return fetch(`/api/auth/sign_in`, {
+    return fetch(`${API_HOST}/api/auth/sign_in`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
