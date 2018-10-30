@@ -48,7 +48,7 @@ class Client {
   }
 
   getProjects() {
-    return fetch(`/api/projects`, {
+    return fetch(`${API_HOST}/api/projects`, {
       headers: {
         ...this.getAuthHeaders(),
         'Accept': 'application/json',
@@ -58,7 +58,7 @@ class Client {
   }
 
   getProject(id) {
-    return fetch(`/api/projects/${id}`, {
+    return fetch(`${API_HOST}/api/projects/${id}`, {
       headers: {
         ...this.getAuthHeaders(),
         'Accept': 'application/json',
@@ -68,7 +68,7 @@ class Client {
   }
 
   createProject(project) {
-    return fetch(`/api/projects`, {
+    return fetch(`${API_HOST}/api/projects`, {
       body: JSON.stringify(project),
       method: 'post',
       headers: {
@@ -107,7 +107,7 @@ class Client {
   )
 
   logout() {
-    return fetch(`/api/auth/sign_out`, {
+    return fetch(`${API_HOST}/api/auth/sign_out`, {
       method: 'delete',
       headers: {
         ...this.getAuthHeaders(),
