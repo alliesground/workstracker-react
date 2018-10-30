@@ -8,7 +8,7 @@ const LOCAL_CLIENT_ID_STORAGE_KEY = 'client-id';
 const LOCAL_UID_STORAGE_KEY = 'uid';
 const LOCAL_TOKEN_EXP_STORAGE_KEY = 'token-exp-time';
 
-const API_HOST = process.env.REACT_APP_API_HOST || '';
+const API_HOST = process.env.REACT_APP_API_HOST;
 
 
 class Client {
