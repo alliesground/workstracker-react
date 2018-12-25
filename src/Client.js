@@ -1,6 +1,3 @@
-import URLSeachParams from 'url-search-params';
-import jwt_decode from 'jwt-decode';
-
 const LOCAL_AUTH_TOKEN_STORAGE_KEY = 'sameer';
 
 const LOCAL_ACCESS_TOKEN_STORAGE_KEY = 'access-token';
@@ -96,7 +93,6 @@ class Client {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-        //'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
       body: JSON.stringify(data)
     }).then(this.checkStatus);
