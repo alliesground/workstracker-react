@@ -4,7 +4,7 @@ import { types } from './types';
 const ids = (state = [], action) => {
   switch (action.type) {
     case types.FETCH_PROJECTS_SUCCESS:
-      return action.response.map(project => project.id);
+      return Object.keys(action.response.projects);
     case types.CREATE_PROJECT_SUCCESS:
       return [ ...state, action.response.id ];
     case types.FETCH_PROJECT_SUCCESS:

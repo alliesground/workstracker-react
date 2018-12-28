@@ -1,3 +1,5 @@
+import normalize from 'json-api-normalizer';
+
 const LOCAL_AUTH_TOKEN_STORAGE_KEY = 'sameer';
 
 const LOCAL_ACCESS_TOKEN_STORAGE_KEY = 'access-token';
@@ -51,7 +53,8 @@ class Client {
         'Accept': 'application/json',
       }
     }).then(this.checkStatus)
-      .then(this.parseJson);
+      .then(this.parseJson)
+      .then(this.normalizeJson);
   }
 
   getProject(id) {
@@ -193,6 +196,11 @@ class Client {
 
   parseJson(response) {
     return response.json();
+  }
+
+  normalizeJson(json) {
+    //console.log('Normalized response: ', normalize(json));
+    return Object.assign({}, normalize(json));
   }
 
   setTokenExpTime = (expTime) => {

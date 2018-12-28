@@ -4,9 +4,9 @@ export default (state = {}, action) => {
   switch (action.type) {
     case types.FETCH_PROJECTS_SUCCESS:
       const nextState = { ...state };
-      action.response.forEach(project => {
-        nextState[project.id] = project;
-      });
+      Object.entries(action.response.projects).forEach(
+        ([key, project]) => nextState[key] = project
+      );
       return nextState;
     case types.CREATE_PROJECT_SUCCESS:
       return {

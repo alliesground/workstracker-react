@@ -39,7 +39,7 @@ class Project extends Component {
     else if (this.isProjectPresentLocally()) {
       return (
         <div>
-          <h2>Your Project: {this.project.attributes.title}</h2>
+          <h2>Your Project: {this.project.attributes.title}</h2>         <p>Members: </p>
         </div>
       );
     }

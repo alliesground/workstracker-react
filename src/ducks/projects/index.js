@@ -47,7 +47,8 @@ const fetchProjects = () => ((dispatch) => {
 
   client.getProjects().then(
     (response) => {
-      dispatch(actions.fetchProjectsSuccess(response.data));
+      console.log('Response: ', response);
+      dispatch(actions.fetchProjectsSuccess(response));
     },
     (error) => {
       dispatch(actions.fetchProjectsFailure());
