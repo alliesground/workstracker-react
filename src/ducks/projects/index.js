@@ -111,6 +111,11 @@ export const selectors = {
     const ids = listSelectors.getIds(state.list);
     return ids.map(id => byIdSelectors.getProject(state.byId, id));
   },
+  getMemberIds: (pId, state) => {
+    const project = byIdSelectors.getProject(state.byId, pId);
+    
+    return project.relationships.users.data.map(member => member.id);
+  },
   getIsFetching: (state) => 
     listSelectors.getIsFetching(state.list)
 }

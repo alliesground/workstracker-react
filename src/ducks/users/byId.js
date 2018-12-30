@@ -13,3 +13,7 @@ export default (state = {}, action) => {
   }
 }
 
+export const selectors = {
+  getUser : (state, id) => state[id]
+}
+

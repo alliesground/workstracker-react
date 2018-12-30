@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
 import byId from './byId';
-import allIds from './allIds';
+import list from './list';
 
 export default combineReducers({
   byId,
-  allIds
+  list
 })
+

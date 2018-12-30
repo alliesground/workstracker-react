@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { selectors, actions } from '../ducks/projects/index';
+import { selectors as usersByIdSelectors } from '../ducks/users/byId';
 import { Redirect } from 'react-router-dom';
+import MemberList from './MemberList';
 
 class Project extends Component {
   constructor (props) {
@@ -39,7 +41,13 @@ class Project extends Component {
     else if (this.isProjectPresentLocally()) {
       return (
         <div>
-          <h2>Your Project: {this.project.attributes.title}</h2>         <p>Members: </p>
+          <h2>Your Project: {this.project.attributes.title}</h2>
+
+          <MemberList 
+            members={
+              this.props.members(this.projectId)
+            }
+          />
         </div>
       );
     }
@@ -50,7 +58,12 @@ class Project extends Component {
 const mapStateToProps = (state) => ({
   projects: selectors.getProjects(state.projects),
   isFetching: selectors.getIsFetching(state.projects),
-  shouldRedirect: state.projects.shouldRedirect
+  shouldRedirect: state.projects.shouldRedirect,
+  members: (pId) => {
+    const memberIds = selectors.getMemberIds(pId, state.projects);
+
+    return memberIds.map(id => usersByIdSelectors.getUser(state.users.byId, id));
+  }
 })
 
 const mapDispatchToProps = (dispatch) => {
