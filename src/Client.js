@@ -199,7 +199,6 @@ class Client {
   }
 
   normalizeJson(json) {
-    //console.log('Normalized response: ', normalize(json));
     return Object.assign({}, normalize(json));
   }
 

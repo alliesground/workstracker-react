@@ -4,9 +4,11 @@ export default (state = {}, action) => {
   switch (action.type) {
     case types.FETCH_PROJECTS_SUCCESS:
       const nextState = { ...state };
-      Object.entries(action.response.users).forEach(
-        ([key, user]) => nextState[key] = user
-      );
+      if (action.response.hasOwnProperty('users')) {
+        Object.entries(action.response.users).forEach(
+          ([key, user]) => nextState[key] = user
+        );
+      }
       return nextState;
     default:
       return state;

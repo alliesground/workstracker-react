@@ -4,7 +4,10 @@ import { types } from './types';
 const ids = (state = [], action) => {
   switch (action.type) {
     case types.FETCH_PROJECTS_SUCCESS:
-      return Object.keys(action.response.projects);
+      if (action.response.hasOwnProperty('projects')) {
+        return Object.keys(action.response.projects);
+      }
+      else { return state }
     case types.CREATE_PROJECT_SUCCESS:
       return [ ...state, action.response.id ];
     case types.FETCH_PROJECT_SUCCESS:
