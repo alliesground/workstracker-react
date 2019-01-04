@@ -4,9 +4,8 @@ import { types } from '../projects/types';
 const ids = (state = [], action) => {
   switch (action.type) {
     case types.FETCH_PROJECTS_SUCCESS:
-      if (action.response.hasOwnProperty('users')) {
-        return Object.keys(action.response.users)
-      } else { return state }
+      return Object.keys(action.response.users)
+    case types.FETCH_PROJECTS_EMPTY:
     default:
         return state;
   }

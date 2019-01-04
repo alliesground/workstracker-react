@@ -48,7 +48,11 @@ const fetchProjects = () => ((dispatch) => {
   client.getProjects().then(
     (response) => {
       console.log('Response: ', response);
-      dispatch(actions.fetchProjectsSuccess(response));
+      if (response.hasOwnProperty('projects')) {
+        dispatch(actions.fetchProjectsSuccess(response));
+      } else {
+        dispatch(actions.fetchProjectsEmpty());
+      }
     },
     (error) => {
       dispatch(actions.fetchProjectsFailure());
@@ -83,6 +87,9 @@ export const actions = {
   }),
   fetchProjectsFailure: () => ({
     type: types.FETCH_PROJECTS_FAILURE
+  }),
+  fetchProjectsEmpty: () => ({
+    type: types.FETCH_PROJECTS_EMPTY
   }),
   fetchProject,
   fetchProjectSuccess: (response) => ({

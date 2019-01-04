@@ -4,11 +4,9 @@ export default (state = {}, action) => {
   switch (action.type) {
     case types.FETCH_PROJECTS_SUCCESS:
       const nextState = { ...state };
-      if (action.response.hasOwnProperty('projects')) {
-        Object.entries(action.response.projects).forEach(
-          ([key, project]) => nextState[key] = project
-        );
-      }
+      Object.entries(action.response.projects).forEach(
+        ([key, project]) => nextState[key] = project
+      );
       return nextState;
     case types.CREATE_PROJECT_SUCCESS:
       return {
@@ -20,6 +18,7 @@ export default (state = {}, action) => {
         ...state,
         [action.response.id]: action.response
       }
+    case types.FETCH_PROJECTS_EMPTY:
     default:
       return state;
   }
